@@ -23,21 +23,15 @@ namespace shock_audio {
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>
-    MutableRangeMap<KEY_TYPE, DATA_TYPE>::checkIfRootRed(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::checkIfRootDoubleBlackOrRed(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
         if (node->getColor() == Color::RED) {
             node->setColor(Color::BLACK);
             return rebalanceTreeAfterInsert(std::move(node));
-        } else
+        } else {
+            if (node->getColor() == Color::DOUBLE_BLACK)
+                node->setColor(Color::BLACK);
             return node;
-    }
-
-    template<typename KEY_TYPE, typename DATA_TYPE>
-    std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>
-    MutableRangeMap<KEY_TYPE, DATA_TYPE>::checkIfRootDoubleBlack(
-            std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
-        if (node->getColor() == Color::DOUBLE_BLACK)
-            node->setColor(Color::BLACK);
-        return node;
+        }
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
@@ -124,18 +118,7 @@ namespace shock_audio {
     std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>
     MutableRangeMap<KEY_TYPE, DATA_TYPE>::successorDelete(MutableRangeNode<KEY_TYPE, DATA_TYPE> *root,
                                                           std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
-        if (root == node.get()) {
-            if (node->getRightPtr()->getLeftPtr() == nullptr) {
-                node->setRange(node->getRightPtr()->getRange());
-                node->setValue(node->getRightPtr()->getValue());
-                updateColorsBeforeDelete(node->getRightPtr());
-                node->setRight(node->getRightPtr()->getRightUniquePtr());
-                updateMax(node.get());
-                return rebalanceTreeAfterDelete(std::move(node));
-            } else {
-                node->setRight(successorDelete(root, node->getRightUniquePtr()));
-            }
-        } else if (node->getLeftPtr()->getLeftPtr() != nullptr) {
+        if (node->getLeftPtr()->getLeftPtr() != nullptr) {
             node->setLeft(successorDelete(root, node->getLeftUniquePtr()));
         } else {
             root->setRange(node->getLeftPtr()->getRange());
@@ -170,7 +153,17 @@ namespace shock_audio {
                 updateColorsBeforeDelete(node.get());
                 return std::move(node->getLeftUniquePtr());
             } else {
-                return rebalanceTreeAfterDelete(successorDelete(node.get(), std::move(node)));
+                if (node->getRightPtr()->getLeftPtr() == nullptr) {
+                    node->setRange(node->getRightPtr()->getRange());
+                    node->setValue(node->getRightPtr()->getValue());
+                    updateColorsBeforeDelete(node->getRightPtr());
+                    node->setRight(node->getRightPtr()->getRightUniquePtr());
+                    updateMax(node.get());
+                    return rebalanceTreeAfterDelete(std::move(node));
+                } else {
+                    node->setRight(successorDelete(node.get(), node->getRightUniquePtr()));
+                    return rebalanceTreeAfterDelete(std::move(node));
+                }
             }
         } else {
             if (range.first <= node->getTo()) {
@@ -188,12 +181,12 @@ namespace shock_audio {
     template<typename KEY_TYPE, typename DATA_TYPE>
     void MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeByRange(std::pair<KEY_TYPE, KEY_TYPE> range) {
         // TODO insert assert to range
-        _root = std::move(removeByRangeRecurr(std::move(_root), range));
+        _root = std::move(checkIfRootDoubleBlackOrRed(removeByRangeRecurr(std::move(_root), range)));
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     void MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeAllInRange(std::pair<KEY_TYPE, KEY_TYPE> range) {
-        _root = std::move(checkIfRootDoubleBlack(removeAllInRangeRecurr(std::move(_root), range)));
+        _root = std::move(checkIfRootDoubleBlackOrRed(removeAllInRangeRecurr(std::move(_root), range)));
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
@@ -473,7 +466,7 @@ namespace shock_audio {
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     void MutableRangeMap<KEY_TYPE, DATA_TYPE>::put(std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value) {
-        _root = std::move(checkIfRootRed(insert(std::move(_root), range, value)));
+        _root = std::move(checkIfRootDoubleBlackOrRed(insert(std::move(_root), range, value)));
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
@@ -483,7 +476,7 @@ namespace shock_audio {
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     void MutableRangeMap<KEY_TYPE, DATA_TYPE>::put(KEY_TYPE from, KEY_TYPE to, DATA_TYPE value) {
-        _root = std::move(checkIfRootRed(insert(std::move(_root), std::pair<KEY_TYPE, KEY_TYPE>(from, to), value)));
+        _root = std::move(checkIfRootDoubleBlackOrRed(insert(std::move(_root), std::pair<KEY_TYPE, KEY_TYPE>(from, to), value)));
     }
 
     template<typename DATA_TYPE>

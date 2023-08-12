@@ -23,7 +23,7 @@ std::ostream &operator <<(std::ostream& output, const std::vector<DATA_TYPE>& va
  * 8). LRED +
  * 9). RRED +
  * 10). Root +
- * 11). Successor -
+ * 11). Successor +
  */
 int main() {
     auto t = new shock_audio::MutableRangeMap<int, char>();
@@ -48,8 +48,8 @@ int main() {
     t->removeByRange(std::pair(35, 35));
     t->put(2, 2, 'e');
     t->put(1, 1, 'w');
-    t->removeByRange(std::pair(6, 6));
     t->removeByRange(std::pair(10, 10));
+    t->removeByRange(std::pair(2, 2));
     t->removeByRange(std::pair(11, 11));
 //    t->put(3, 44, 'n');
 //    t->put(3, 34, 'd');

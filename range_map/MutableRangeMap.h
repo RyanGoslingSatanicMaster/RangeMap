@@ -75,9 +75,7 @@ namespace shock_audio {
 
         std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> switchColors(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
 
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> checkIfRootDoubleBlack(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
-
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> checkIfRootRed(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
+        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> checkIfRootDoubleBlackOrRed(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
 
         std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> removeAllInRangeRecurr(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::pair<KEY_TYPE, KEY_TYPE> range);
 
