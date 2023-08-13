@@ -2,6 +2,7 @@
 Range map implementation combine several data structures: 
 1. Red-Black Tree(for self balancing).
 2. Interval Tree(for fast interaction with ranges).
+
 Data structure was developed according to immutable principles. Tree allow to pass equal ranges, therefor values of nodes represented as a vector.
 ## Structure:
 ### RangeNode
