@@ -3,6 +3,7 @@
 
 #include <utility>
 #include <vector>
+#include <functional>
 #include "MutableRangeNode.h"
 #include "RangeNode.h"
 #include "RangeMap.h"
@@ -32,19 +33,41 @@ namespace shock_audio {
 
         std::vector<DATA_TYPE> get(KEY_TYPE from, KEY_TYPE to) const override;
 
-        void put(KEY_TYPE from, KEY_TYPE to, DATA_TYPE value);
+        std::vector<DATA_TYPE> getBy(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate) const override;
 
-        void put(MutableRangeNode<KEY_TYPE, DATA_TYPE> node);
+        void put(KEY_TYPE from, KEY_TYPE to, DATA_TYPE value);
 
         void put(std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value);
 
-        void removeByRange(std::pair<KEY_TYPE, KEY_TYPE> range);
+        void removeFirstByRange(std::pair<KEY_TYPE, KEY_TYPE> range);
+
+        void removeByRange(std::pair<KEY_TYPE, KEY_TYPE> range, unsigned int count);
 
         void removeAllInRange(std::pair<KEY_TYPE, KEY_TYPE> range);
 
-        void removeByKey(KEY_TYPE key);
+        void removeFirstByKey(KEY_TYPE key);
 
-        void removeInValue(DATA_TYPE val);
+        void removeByKey(KEY_TYPE key, unsigned int count);
+
+        void removeAllByKey(KEY_TYPE key);
+
+        void removeIf(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate);
+
+        void removeFirstByValue(DATA_TYPE val);
+
+        void removeByValue(DATA_TYPE val, unsigned int count);
+
+        void removaAllByValue(DATA_TYPE val);
+
+        void merge(MutableRangeMap<KEY_TYPE, DATA_TYPE> &map);
+
+        void merge(std::unique_ptr<MutableRangeMap<KEY_TYPE, DATA_TYPE>> map);
+
+        std::unique_ptr<MutableRangeMap<KEY_TYPE, DATA_TYPE>> split(std::pair<KEY_TYPE, KEY_TYPE> range, bool isByOverlap);
+
+        MutableRangeNode<KEY_TYPE, DATA_TYPE>* getMaxNode();
+
+        MutableRangeNode<KEY_TYPE, DATA_TYPE>* getMinNode();
 
         int getBalanceDifference();
 
@@ -77,11 +100,11 @@ namespace shock_audio {
 
         std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> checkIfRootDoubleBlackOrRed(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
 
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> removeAllInRangeRecurr(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::pair<KEY_TYPE, KEY_TYPE> range);
-
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> removeByRangeRecurr(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::pair<KEY_TYPE, KEY_TYPE> range);
+        std::pair<bool, std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>> removeByRangeRecur(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::pair<KEY_TYPE, KEY_TYPE> range);
 
         bool isNullNode(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
+
+
 
         void updateMax(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
 

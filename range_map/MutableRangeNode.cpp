@@ -171,6 +171,37 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isOverlap(const RangeNode<KEY_TYPE, DATA_TYPE>& other) const {
+        auto otherFrom = other.getFrom();
+        auto otherTo = other.getTo();
+        return _from <= otherTo && _from >= otherFrom
+        || _to <= otherTo && _to >= otherFrom
+        || _from <= otherFrom && _to >= otherTo
+        || otherFrom <= _from && otherTo >= _to;
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isOverlap(KEY_TYPE other) const {
+        return other >= _from && other <= _to;
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isOverlap(std::pair<KEY_TYPE, KEY_TYPE> range) const {
+        return _from <= range.second && _from >= range.first
+               || _to <= range.second && _to >= range.first
+               || _from <= range.first && _to >= range.second
+               || range.first <= _from && range.second >= _to;
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isOverlap(KEY_TYPE from, KEY_TYPE to) const {
+        return _from <= to && _from >= from
+               || _to <= to && _to >= from
+               || _from <= from && _to >= to
+               || from <= _from && to >= _to;
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
     void MutableRangeNode<KEY_TYPE, DATA_TYPE>::addValue(DATA_TYPE value) {
         _value.push_back(value);
     }

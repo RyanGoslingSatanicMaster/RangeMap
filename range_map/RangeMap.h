@@ -17,6 +17,8 @@ namespace shock_audio{
 
         virtual std::vector<DATA_TYPE> get(KEY_TYPE from, KEY_TYPE to) const = 0;
 
+        virtual std::vector<DATA_TYPE> getBy(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate) const = 0;
+
     };
 
 }

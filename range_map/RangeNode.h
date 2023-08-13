@@ -22,6 +22,14 @@ namespace shock_audio{
         virtual RangeNode* getLeft() const = 0;
 
         virtual RangeNode* getRight() const = 0;
+
+        virtual bool isOverlap(const RangeNode<KEY_TYPE, DATA_TYPE>& other) const = 0;
+
+        virtual bool isOverlap(KEY_TYPE other) const = 0;
+
+        virtual bool isOverlap(std::pair<KEY_TYPE, KEY_TYPE> range) const = 0;
+
+        virtual bool isOverlap(KEY_TYPE from, KEY_TYPE to) const = 0;
     };
 
 }

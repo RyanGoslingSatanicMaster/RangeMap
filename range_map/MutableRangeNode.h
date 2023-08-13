@@ -62,6 +62,14 @@ namespace shock_audio {
 
         std::vector<DATA_TYPE> getValue() const override;
 
+        bool isOverlap(const RangeNode<KEY_TYPE, DATA_TYPE>& other) const override;
+
+        bool isOverlap(KEY_TYPE other) const override;
+
+        bool isOverlap(std::pair<KEY_TYPE, KEY_TYPE> range) const override;
+
+        bool isOverlap(KEY_TYPE from, KEY_TYPE to) const override;
+
         RangeNode<KEY_TYPE, DATA_TYPE>* getLeft() const override;
 
         RangeNode<KEY_TYPE, DATA_TYPE>* getRight() const override;
@@ -91,6 +99,7 @@ namespace shock_audio {
 
         void assertRange(KEY_TYPE from, KEY_TYPE to);
     };
+
 
 }
 
