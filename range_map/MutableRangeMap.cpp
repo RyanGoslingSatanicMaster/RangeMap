@@ -10,11 +10,11 @@ namespace shock_audio {
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     MutableRangeMap<KEY_TYPE, DATA_TYPE>::MutableRangeMap(std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value) :
-            _root(std::make_unique<MutableRangeNode<KEY_TYPE, DATA_TYPE>>(range, value, Color::BLACK)) {}
+            _root(std::make_unique<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>(range, value, shock_audio_impl::Color::BLACK)) {}
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     MutableRangeMap<KEY_TYPE, DATA_TYPE>::MutableRangeMap(KEY_TYPE from, KEY_TYPE to, DATA_TYPE value) :
-            _root(std::make_unique<MutableRangeNode<KEY_TYPE, DATA_TYPE>>(from, to, value, Color::BLACK)) {}
+            _root(std::make_unique<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>(from, to, value, shock_audio_impl::Color::BLACK)) {}
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     RangeNode<KEY_TYPE, DATA_TYPE> *MutableRangeMap<KEY_TYPE, DATA_TYPE>::getRoot() {
@@ -22,23 +22,23 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>
-    MutableRangeMap<KEY_TYPE, DATA_TYPE>::checkIfRootDoubleBlackOrRed(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
-        if (node->getColor() == Color::RED) {
-            node->setColor(Color::BLACK);
+    std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::checkIfRootDoubleBlackOrRed(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
+        if (node->getColor() == shock_audio_impl::Color::RED) {
+            node->setColor(shock_audio_impl::Color::BLACK);
             return rebalanceTreeAfterInsert(std::move(node));
         } else {
-            if (node->getColor() == Color::DOUBLE_BLACK)
-                node->setColor(Color::BLACK);
+            if (node->getColor() == shock_audio_impl::Color::DOUBLE_BLACK)
+                node->setColor(shock_audio_impl::Color::BLACK);
             return node;
         }
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>
+    std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>
     MutableRangeMap<KEY_TYPE, DATA_TYPE>::rebalanceTreeAfterDelete(
-            std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> temp_node;
+            std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> temp_node;
         switch (checkBalanceCaseAfterDelete(node.get())) {
             case BB:
                 temp_node = switchColors(std::move(node));
@@ -56,32 +56,32 @@ namespace shock_audio {
                 if (isNullNode(temp_node->getRightPtr()->getRightPtr()))
                     temp_node->getRightPtr()->setRight(nullptr);
                 else
-                    temp_node->getRightPtr()->getRightPtr()->setColor(Color::BLACK);
-                temp_node->getLeftPtr()->setColor(Color::BLACK);
+                    temp_node->getRightPtr()->getRightPtr()->setColor(shock_audio_impl::Color::BLACK);
+                temp_node->getLeftPtr()->setColor(shock_audio_impl::Color::BLACK);
                 break;
             case BRLR:
                 temp_node = leftRightRotate(std::move(node));
                 if (isNullNode(temp_node->getRightPtr()->getRightPtr()))
                     temp_node->getRightPtr()->setRight(nullptr);
                 else
-                    temp_node->getRightPtr()->getRightPtr()->setColor(Color::BLACK);
-                temp_node->getLeftPtr()->setColor(Color::BLACK);
+                    temp_node->getRightPtr()->getRightPtr()->setColor(shock_audio_impl::Color::BLACK);
+                temp_node->getLeftPtr()->setColor(shock_audio_impl::Color::BLACK);
                 break;
             case BRRL:
                 temp_node = rightLeftRotate(std::move(node));
                 if (isNullNode(temp_node->getLeftPtr()->getLeftPtr()))
                     temp_node->getLeftPtr()->setLeft(nullptr);
                 else
-                    temp_node->getLeftPtr()->getLeftPtr()->setColor(Color::BLACK);
-                temp_node->getRightPtr()->setColor(Color::BLACK);
+                    temp_node->getLeftPtr()->getLeftPtr()->setColor(shock_audio_impl::Color::BLACK);
+                temp_node->getRightPtr()->setColor(shock_audio_impl::Color::BLACK);
                 break;
             case BRRR:
                 temp_node = rightRightRotate(std::move(node));
                 if (isNullNode(temp_node->getLeftPtr()->getLeftPtr()))
                     temp_node->getLeftPtr()->setLeft(nullptr);
                 else
-                    temp_node->getLeftPtr()->getLeftPtr()->setColor(Color::BLACK);
-                temp_node->getRightPtr()->setColor(Color::BLACK);
+                    temp_node->getLeftPtr()->getLeftPtr()->setColor(shock_audio_impl::Color::BLACK);
+                temp_node->getRightPtr()->setColor(shock_audio_impl::Color::BLACK);
                 break;
             case NO:
                 temp_node = std::move(node);
@@ -91,33 +91,33 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    void MutableRangeMap<KEY_TYPE, DATA_TYPE>::updateColorsBeforeDelete(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
+    void MutableRangeMap<KEY_TYPE, DATA_TYPE>::updateColorsBeforeDelete(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
         if (node->getRightPtr() == nullptr && node->getLeftPtr() == nullptr) {
-            if (node->getColor() == Color::BLACK) {
-                node->setLeft(MutableRangeNode<KEY_TYPE, DATA_TYPE>::generateNULLNode());
-                node->setRight(MutableRangeNode<KEY_TYPE, DATA_TYPE>::generateNULLNode());
+            if (node->getColor() == shock_audio_impl::Color::BLACK) {
+                node->setLeft(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>::generateNULLNode());
+                node->setRight(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>::generateNULLNode());
             }
             return;
         }
         if (node->getRightPtr() == nullptr) {
-            if (node->getColor() == Color::RED || node->getLeftPtr()->getColor() == Color::RED) {
-                node->getLeftPtr()->setColor(Color::BLACK);
+            if (node->getColor() == shock_audio_impl::Color::RED || node->getLeftPtr()->getColor() == shock_audio_impl::Color::RED) {
+                node->getLeftPtr()->setColor(shock_audio_impl::Color::BLACK);
             } else {
-                node->getLeftPtr()->setColor(Color::DOUBLE_BLACK);
+                node->getLeftPtr()->setColor(shock_audio_impl::Color::DOUBLE_BLACK);
             }
         } else {
-            if (node->getColor() == Color::RED || node->getRightPtr()->getColor() == Color::RED) {
-                node->getRightPtr()->setColor(Color::BLACK);
+            if (node->getColor() == shock_audio_impl::Color::RED || node->getRightPtr()->getColor() == shock_audio_impl::Color::RED) {
+                node->getRightPtr()->setColor(shock_audio_impl::Color::BLACK);
             } else {
-                node->getRightPtr()->setColor(Color::DOUBLE_BLACK);
+                node->getRightPtr()->setColor(shock_audio_impl::Color::DOUBLE_BLACK);
             }
         }
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>
-    MutableRangeMap<KEY_TYPE, DATA_TYPE>::successorDelete(MutableRangeNode<KEY_TYPE, DATA_TYPE> *root,
-                                                          std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
+    std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::successorDelete(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *root,
+                                                          std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
         if (node->getLeftPtr()->getLeftPtr() != nullptr) {
             node->setLeft(successorDelete(root, node->getLeftUniquePtr()));
         } else {
@@ -133,17 +133,19 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    std::pair<bool, std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>> MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeByRangeRecur(
-            std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::pair<KEY_TYPE, KEY_TYPE> range) {
+    std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeByContainRangeRecur(
+            std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node,
+            std::pair<KEY_TYPE, KEY_TYPE> range) {
         if (node == nullptr)
-            return std::pair<bool, std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(false, std::move(node));
-        if (range.first == node->getFrom() && range.second == node->getTo()) {
+            return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(false, std::move(node));
+        if (node->isOverlap(range)) {
             if (node->getLeftPtr() == nullptr) {
                 updateColorsBeforeDelete(node.get());
-                return std::pair<bool, std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, std::move(node->getRightUniquePtr()));
+                return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, std::move(node->getRightUniquePtr()));
             } else if (node->getRightPtr() == nullptr) {
                 updateColorsBeforeDelete(node.get());
-                return std::pair<bool, std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, std::move(node->getLeftUniquePtr()));
+                return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, std::move(node->getLeftUniquePtr()));
             } else {
                 if (node->getRightPtr()->getLeftPtr() == nullptr) {
                     node->setRange(node->getRightPtr()->getRange());
@@ -154,11 +156,131 @@ namespace shock_audio {
                 } else {
                     node->setRight(successorDelete(node.get(), node->getRightUniquePtr()));
                 }
-                return std::pair<bool, std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, rebalanceTreeAfterDelete(std::move(node)));
+                return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, rebalanceTreeAfterDelete(std::move(node)));
             }
         } else {
-            std::pair<bool, std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>> result;
-            if (range.first <= node->getTo()) {
+            std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> result;
+            if (range.first <= node->getFrom()) {
+                result = removeByContainRangeRecur(node->getLeftUniquePtr(), range);
+                node->setLeft(std::move(result.second));
+                updateMax(node.get());
+            } else {
+                result = removeByContainRangeRecur(node->getRightUniquePtr(), range);
+                node->setRight(std::move(result.second));
+                updateMax(node.get());
+            }
+            return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(result.second, rebalanceTreeAfterDelete(std::move(node)));
+        }
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeByOverlapRangeRecur(
+            std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node,
+            std::pair<KEY_TYPE, KEY_TYPE> range) {
+        if (node == nullptr)
+            return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(false, std::move(node));
+        if (node->isOverlap(range)) {
+            if (node->getLeftPtr() == nullptr) {
+                updateColorsBeforeDelete(node.get());
+                return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, std::move(node->getRightUniquePtr()));
+            } else if (node->getRightPtr() == nullptr) {
+                updateColorsBeforeDelete(node.get());
+                return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, std::move(node->getLeftUniquePtr()));
+            } else {
+                if (node->getRightPtr()->getLeftPtr() == nullptr) {
+                    node->setRange(node->getRightPtr()->getRange());
+                    node->setValue(node->getRightPtr()->getValue());
+                    updateColorsBeforeDelete(node->getRightPtr());
+                    node->setRight(node->getRightPtr()->getRightUniquePtr());
+                    updateMax(node.get());
+                } else {
+                    node->setRight(successorDelete(node.get(), node->getRightUniquePtr()));
+                }
+                return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, rebalanceTreeAfterDelete(std::move(node)));
+            }
+        } else {
+            std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> result;
+            if (range.first <= node->getFrom()) {
+                result = removeByOverlapRangeRecur(node->getLeftUniquePtr(), range);
+                node->setLeft(std::move(result.second));
+                updateMax(node.get());
+            } else {
+                result = removeByOverlapRangeRecur(node->getRightUniquePtr(), range);
+                node->setRight(std::move(result.second));
+                updateMax(node.get());
+            }
+            return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(result.second, rebalanceTreeAfterDelete(std::move(node)));
+        }
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeByKeyRecur(
+            std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, KEY_TYPE key) {
+        if (node == nullptr)
+            return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(false, std::move(node));
+        if (node->isOverlap(key)) {
+            if (node->getLeftPtr() == nullptr) {
+                updateColorsBeforeDelete(node.get());
+                return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, std::move(node->getRightUniquePtr()));
+            } else if (node->getRightPtr() == nullptr) {
+                updateColorsBeforeDelete(node.get());
+                return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, std::move(node->getLeftUniquePtr()));
+            } else {
+                if (node->getRightPtr()->getLeftPtr() == nullptr) {
+                    node->setRange(node->getRightPtr()->getRange());
+                    node->setValue(node->getRightPtr()->getValue());
+                    updateColorsBeforeDelete(node->getRightPtr());
+                    node->setRight(node->getRightPtr()->getRightUniquePtr());
+                    updateMax(node.get());
+                } else {
+                    node->setRight(successorDelete(node.get(), node->getRightUniquePtr()));
+                }
+                return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, rebalanceTreeAfterDelete(std::move(node)));
+            }
+        } else {
+            std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> result;
+            if (key <= node->getFrom()) {
+                result = removeByKeyRecur(node->getLeftUniquePtr(), key);
+                node->setLeft(std::move(result.second));
+                updateMax(node.get());
+            } else {
+                result = removeByKeyRecur(node->getRightUniquePtr(), key);
+                node->setRight(std::move(result.second));
+                updateMax(node.get());
+            }
+            return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(result.second, rebalanceTreeAfterDelete(std::move(node)));
+        }
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeByRangeRecur(
+            std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::pair<KEY_TYPE, KEY_TYPE> range) {
+        if (node == nullptr)
+            return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(false, std::move(node));
+        if (node->isEqualRange(range)) {
+            if (node->getLeftPtr() == nullptr) {
+                updateColorsBeforeDelete(node.get());
+                return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, std::move(node->getRightUniquePtr()));
+            } else if (node->getRightPtr() == nullptr) {
+                updateColorsBeforeDelete(node.get());
+                return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, std::move(node->getLeftUniquePtr()));
+            } else {
+                if (node->getRightPtr()->getLeftPtr() == nullptr) {
+                    node->setRange(node->getRightPtr()->getRange());
+                    node->setValue(node->getRightPtr()->getValue());
+                    updateColorsBeforeDelete(node->getRightPtr());
+                    node->setRight(node->getRightPtr()->getRightUniquePtr());
+                    updateMax(node.get());
+                } else {
+                    node->setRight(successorDelete(node.get(), node->getRightUniquePtr()));
+                }
+                return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(true, rebalanceTreeAfterDelete(std::move(node)));
+            }
+        } else {
+            std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> result;
+            if (range.first <= node->getFrom()) {
                 result = removeByRangeRecur(node->getLeftUniquePtr(), range);
                 node->setLeft(std::move(result.second));
                 updateMax(node.get());
@@ -167,25 +289,70 @@ namespace shock_audio {
                 node->setRight(std::move(result.second));
                 updateMax(node.get());
             }
-            return std::pair<bool, std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(result.second, rebalanceTreeAfterDelete(std::move(node)));
+            return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(result.second, rebalanceTreeAfterDelete(std::move(node)));
         }
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    void MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeFirstByRange(std::pair<KEY_TYPE, KEY_TYPE> range) {
-        // TODO insert assert to range
-        auto result = removeByRangeRecur(std::move(_root), range);
+    void MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeFirstByOverlapRange(std::pair<KEY_TYPE, KEY_TYPE> range) {
+        auto result = removeByOverlapRangeRecur(std::move(_root), range);
         _root = std::move(checkIfRootDoubleBlackOrRed(std::move(result.second)));
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    void MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeAllInRange(std::pair<KEY_TYPE, KEY_TYPE> range) {
-        _root = std::move(checkIfRootDoubleBlackOrRed(removeAllInRangeRecurr(std::move(_root), range)));
+    void MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeAllByOverlapRange(std::pair<KEY_TYPE, KEY_TYPE> range) {
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> new_root = std::move(_root);
+        auto resFlag = true;
+        while (resFlag) {
+            auto result = removeByOverlapRangeRecur(std::move(new_root), range);
+            new_root = std::move(checkIfRootDoubleBlackOrRed(std::move(result.second)));
+            resFlag = result.first;
+        }
+        _root = std::move(new_root);
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    void MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeByOverlapRange(std::pair<KEY_TYPE, KEY_TYPE> range, unsigned int count) {
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> new_root = std::move(_root);
+        auto resFlag = true;
+        while (resFlag && count > 0) {
+            auto result = removeByOverlapRangeRecur(std::move(new_root), range);
+            new_root = std::move(checkIfRootDoubleBlackOrRed(std::move(result.second)));
+            resFlag = result.first;
+            count--;
+        }
+        _root = std::move(new_root);
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     void MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeFirstByKey(KEY_TYPE key) {
+        auto result = removeByKeyRecur(std::move(_root), key);
+        _root = std::move(checkIfRootDoubleBlackOrRed(std::move(result.second)));
+    }
 
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    void MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeAllByKey(KEY_TYPE key) {
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> new_root = std::move(_root);
+        auto resFlag = true;
+        while (resFlag) {
+            auto result = removeByKeyRecur(std::move(new_root), key);
+            new_root = std::move(checkIfRootDoubleBlackOrRed(std::move(result.second)));
+            resFlag = result.first;
+        }
+        _root = std::move(new_root);
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    void MutableRangeMap<KEY_TYPE, DATA_TYPE>::removeByKey(KEY_TYPE key, unsigned int count) {
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> new_root = std::move(_root);
+        auto resFlag = true;
+        while (resFlag && count > 0) {
+            auto result = removeByKeyRecur(std::move(new_root), key);
+            new_root = std::move(checkIfRootDoubleBlackOrRed(std::move(result.second)));
+            resFlag = result.first;
+            count--;
+        }
+        _root = std::move(new_root);
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
@@ -210,7 +377,7 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    void MutableRangeMap<KEY_TYPE, DATA_TYPE>::updateMax(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
+    void MutableRangeMap<KEY_TYPE, DATA_TYPE>::updateMax(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
         if (node == nullptr)
             return;
         auto nodeMax = node->getRange().second;
@@ -240,37 +407,37 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    bool MutableRangeMap<KEY_TYPE, DATA_TYPE>::isNullNode(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
+    bool MutableRangeMap<KEY_TYPE, DATA_TYPE>::isNullNode(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
         return node->getFrom() == NULL || node->getTo() == NULL;
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     MutableRangeMap<KEY_TYPE, DATA_TYPE>::BalanceCaseDelete
-    MutableRangeMap<KEY_TYPE, DATA_TYPE>::checkBalanceCaseAfterDelete(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::checkBalanceCaseAfterDelete(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
         if (node->getLeftPtr() == nullptr || node->getRightPtr() == nullptr ||
-            node->getLeftPtr()->getColor() != Color::DOUBLE_BLACK &&
-            node->getRightPtr()->getColor() != Color::DOUBLE_BLACK)
+            node->getLeftPtr()->getColor() != shock_audio_impl::Color::DOUBLE_BLACK &&
+            node->getRightPtr()->getColor() != shock_audio_impl::Color::DOUBLE_BLACK)
             return NO;
-        if (node->getLeftPtr()->getColor() == Color::DOUBLE_BLACK) {
-            if (node->getRightPtr()->getColor() == Color::RED)
+        if (node->getLeftPtr()->getColor() == shock_audio_impl::Color::DOUBLE_BLACK) {
+            if (node->getRightPtr()->getColor() == shock_audio_impl::Color::RED)
                 return RRED;
             else if (node->getRightPtr()->getRightPtr() != nullptr &&
-                     node->getRightPtr()->getRightPtr()->getColor() == Color::RED)
+                     node->getRightPtr()->getRightPtr()->getColor() == shock_audio_impl::Color::RED)
                 return BRRR;
             else if (node->getRightPtr()->getLeftPtr() == nullptr ||
-                     node->getRightPtr()->getLeftPtr()->getColor() == Color::BLACK)
+                     node->getRightPtr()->getLeftPtr()->getColor() == shock_audio_impl::Color::BLACK)
                 return BB;
             else
                 return BRRL;
 
         } else {
-            if (node->getLeftPtr()->getColor() == Color::RED)
+            if (node->getLeftPtr()->getColor() == shock_audio_impl::Color::RED)
                 return LRED;
             else if (node->getLeftPtr()->getLeftPtr() != nullptr &&
-                     node->getLeftPtr()->getLeftPtr()->getColor() == Color::RED)
+                     node->getLeftPtr()->getLeftPtr()->getColor() == shock_audio_impl::Color::RED)
                 return BRLL;
             else if (node->getLeftPtr()->getRightPtr() == nullptr ||
-                     node->getLeftPtr()->getRightPtr()->getColor() == Color::BLACK)
+                     node->getLeftPtr()->getRightPtr()->getColor() == shock_audio_impl::Color::BLACK)
                 return BB;
             else
                 return BRLR;
@@ -279,20 +446,20 @@ namespace shock_audio {
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     MutableRangeMap<KEY_TYPE, DATA_TYPE>::BalanceCaseInsert
-    MutableRangeMap<KEY_TYPE, DATA_TYPE>::checkBalanceCaseAfterInsert(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
-        if (node == nullptr || node->getColor() == Color::RED)
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::checkBalanceCaseAfterInsert(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
+        if (node == nullptr || node->getColor() == shock_audio_impl::Color::RED)
             return NOTHING;
         else {
             auto leftChild = node->getLeftPtr();
             auto rightChild = node->getRightPtr();
-            if (rightChild == nullptr || rightChild->getColor() == Color::BLACK) {
-                if (leftChild == nullptr || leftChild->getColor() == Color::BLACK)
+            if (rightChild == nullptr || rightChild->getColor() == shock_audio_impl::Color::BLACK) {
+                if (leftChild == nullptr || leftChild->getColor() == shock_audio_impl::Color::BLACK)
                     return NOTHING;
                 else {
                     auto leftGrandChild = leftChild->getLeftPtr();
                     auto rightGrandChild = leftChild->getRightPtr();
-                    if (leftGrandChild == nullptr || leftGrandChild->getColor() == Color::BLACK)
-                        if (rightGrandChild == nullptr || rightGrandChild->getColor() == Color::BLACK)
+                    if (leftGrandChild == nullptr || leftGrandChild->getColor() == shock_audio_impl::Color::BLACK)
+                        if (rightGrandChild == nullptr || rightGrandChild->getColor() == shock_audio_impl::Color::BLACK)
                             return NOTHING;
                         else
                             return LR;
@@ -300,11 +467,11 @@ namespace shock_audio {
                         return LL;
                 }
             } else {
-                if (leftChild == nullptr || leftChild->getColor() == Color::BLACK) {
+                if (leftChild == nullptr || leftChild->getColor() == shock_audio_impl::Color::BLACK) {
                     auto leftGrandChild = rightChild->getLeftPtr();
                     auto rightGrandChild = rightChild->getRightPtr();
-                    if (leftGrandChild == nullptr || leftGrandChild->getColor() == Color::BLACK)
-                        if (rightGrandChild == nullptr || rightGrandChild->getColor() == Color::BLACK)
+                    if (leftGrandChild == nullptr || leftGrandChild->getColor() == shock_audio_impl::Color::BLACK)
+                        if (rightGrandChild == nullptr || rightGrandChild->getColor() == shock_audio_impl::Color::BLACK)
                             return NOTHING;
                         else
                             return RR;
@@ -318,8 +485,8 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>
-    MutableRangeMap<KEY_TYPE, DATA_TYPE>::leftLeftRotate(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
+    std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::leftLeftRotate(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
         auto temp_subtree = std::move(node->getLeftPtr()->getRightUniquePtr());
         auto new_root = std::move(node->getLeftUniquePtr());
         auto temp_color = new_root->getColor();
@@ -334,8 +501,8 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> MutableRangeMap<KEY_TYPE, DATA_TYPE>::rightRightRotate(
-            std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
+    std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> MutableRangeMap<KEY_TYPE, DATA_TYPE>::rightRightRotate(
+            std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
         auto temp_subtree = std::move(node->getRightPtr()->getLeftUniquePtr());
         auto new_root = std::move(node->getRightUniquePtr());
         auto temp_color = new_root->getColor();
@@ -350,8 +517,8 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>
-    MutableRangeMap<KEY_TYPE, DATA_TYPE>::leftRightRotate(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
+    std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::leftRightRotate(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
         auto temp_subtree = std::move(node->getLeftPtr()->getRightPtr()->getLeftUniquePtr());
         auto new_root = std::move(node->getLeftPtr()->getRightUniquePtr());
         auto temp_color = new_root->getColor();
@@ -367,8 +534,8 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>
-    MutableRangeMap<KEY_TYPE, DATA_TYPE>::rightLeftRotate(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
+    std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::rightLeftRotate(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
         auto temp_subtree = std::move(node->getRightPtr()->getLeftPtr()->getRightUniquePtr());
         auto new_root = std::move(node->getRightPtr()->getLeftUniquePtr());
         auto temp_color = new_root->getColor();
@@ -384,30 +551,30 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>
-    MutableRangeMap<KEY_TYPE, DATA_TYPE>::switchColors(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
-        if (node->getLeftPtr()->getColor() == Color::RED && node->getRightPtr()->getColor() == Color::RED) {
-            node->setColor(Color::RED);
-            node->getRightPtr()->setColor(Color::BLACK);
-            node->getLeftPtr()->setColor(Color::BLACK);
-        } else if (node->getLeftPtr()->getColor() == Color::DOUBLE_BLACK
-                   && node->getRightPtr()->getColor() == Color::BLACK) {
-            if (node->getColor() == Color::BLACK)
-                node->setColor(Color::DOUBLE_BLACK);
+    std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::switchColors(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
+        if (node->getLeftPtr()->getColor() == shock_audio_impl::Color::RED && node->getRightPtr()->getColor() == shock_audio_impl::Color::RED) {
+            node->setColor(shock_audio_impl::Color::RED);
+            node->getRightPtr()->setColor(shock_audio_impl::Color::BLACK);
+            node->getLeftPtr()->setColor(shock_audio_impl::Color::BLACK);
+        } else if (node->getLeftPtr()->getColor() == shock_audio_impl::Color::DOUBLE_BLACK
+                   && node->getRightPtr()->getColor() == shock_audio_impl::Color::BLACK) {
+            if (node->getColor() == shock_audio_impl::Color::BLACK)
+                node->setColor(shock_audio_impl::Color::DOUBLE_BLACK);
             else
-                node->setColor(Color::BLACK);
-            node->getLeftPtr()->setColor(Color::BLACK);
-            node->getRightPtr()->setColor(Color::RED);
+                node->setColor(shock_audio_impl::Color::BLACK);
+            node->getLeftPtr()->setColor(shock_audio_impl::Color::BLACK);
+            node->getRightPtr()->setColor(shock_audio_impl::Color::RED);
             if (isNullNode(node->getLeftPtr()))
                 node->setLeft(nullptr);
-        } else if (node->getRightPtr()->getColor() == Color::DOUBLE_BLACK
-                   && node->getLeftPtr()->getColor() == Color::BLACK) {
-            if (node->getColor() == Color::BLACK)
-                node->setColor(Color::DOUBLE_BLACK);
+        } else if (node->getRightPtr()->getColor() == shock_audio_impl::Color::DOUBLE_BLACK
+                   && node->getLeftPtr()->getColor() == shock_audio_impl::Color::BLACK) {
+            if (node->getColor() == shock_audio_impl::Color::BLACK)
+                node->setColor(shock_audio_impl::Color::DOUBLE_BLACK);
             else
-                node->setColor(Color::BLACK);
-            node->getLeftPtr()->setColor(Color::RED);
-            node->getRightPtr()->setColor(Color::BLACK);
+                node->setColor(shock_audio_impl::Color::BLACK);
+            node->getLeftPtr()->setColor(shock_audio_impl::Color::RED);
+            node->getRightPtr()->setColor(shock_audio_impl::Color::BLACK);
             if (isNullNode(node->getRightPtr()))
                 node->setRight(nullptr);
         }
@@ -415,9 +582,9 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>
+    std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>
     MutableRangeMap<KEY_TYPE, DATA_TYPE>::rebalanceTreeAfterInsert(
-            std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
+            std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node) {
         switch (checkBalanceCaseAfterInsert(node.get())) {
             case LL:
                 return leftLeftRotate(std::move(node));
@@ -435,27 +602,27 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>
-    MutableRangeMap<KEY_TYPE, DATA_TYPE>::insert(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node,
+    std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::insert(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node,
                                                  std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value) {
         if (node == nullptr)
-            return std::make_unique<MutableRangeNode<KEY_TYPE, DATA_TYPE>>(range, value, Color::RED);
+            return std::make_unique<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>(range, value, shock_audio_impl::Color::RED);
 
-        if (node->getFrom() == range.first && node->getTo() == range.second) {
+        if (node->isEqualRange(range)) {
             node->addValue(value);
             return node;
         }
 
-        if (range.first <= node->getTo()) {
+        if (range.first <= node->getFrom()) {
             if (node->getLeftPtr() != nullptr)
                 node->setLeft(insert(node->getLeftUniquePtr(), range, value));
             else
-                node->setLeft(std::make_unique<MutableRangeNode<KEY_TYPE, DATA_TYPE>>(range, value, Color::RED));
+                node->setLeft(std::make_unique<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>(range, value, shock_audio_impl::Color::RED));
         } else {
             if (node->getRightPtr() != nullptr)
                 node->setRight(insert(node->getRightUniquePtr(), range, value));
             else
-                node->setRight(std::make_unique<MutableRangeNode<KEY_TYPE, DATA_TYPE>>(range, value, Color::RED));
+                node->setRight(std::make_unique<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>(range, value, shock_audio_impl::Color::RED));
         }
 
         if (node->getMax() < range.second)
@@ -494,7 +661,7 @@ namespace shock_audio {
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     void
-    MutableRangeMap<KEY_TYPE, DATA_TYPE>::printTreeRecurrent(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node, int spac) {
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::printTreeRecurrent(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node, int spac) {
         if (node != nullptr) {
             auto space = spac + 10;
             printTreeRecurrent(node->getLeftPtr(), space);
@@ -505,13 +672,13 @@ namespace shock_audio {
             auto val = node->getValue();
             char m;
             switch (node->getColor()) {
-                case Color::BLACK:
+                case shock_audio_impl::Color::BLACK:
                     m = 'B';
                     break;
-                case Color::DOUBLE_BLACK:
+                case shock_audio_impl::Color::DOUBLE_BLACK:
                     m = 'D';
                     break;
-                case Color::RED:
+                case shock_audio_impl::Color::RED:
                     m = 'R';
                     break;
             }
@@ -528,17 +695,17 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    int MutableRangeMap<KEY_TYPE, DATA_TYPE>::getDepth(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
+    int MutableRangeMap<KEY_TYPE, DATA_TYPE>::getDepth(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
         if (node == nullptr)
             return 0;
-        if (node->getColor() == Color::RED)
+        if (node->getColor() == shock_audio_impl::Color::RED)
             return std::max(getDepth(node->getLeftPtr()), getDepth(node->getRightPtr()));
         else
             return std::max(getDepth(node->getLeftPtr()), getDepth(node->getRightPtr())) + 1;
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    int MutableRangeMap<KEY_TYPE, DATA_TYPE>::checkDifference(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
+    int MutableRangeMap<KEY_TYPE, DATA_TYPE>::checkDifference(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
         if (node == nullptr)
             return 0;
 
@@ -546,5 +713,11 @@ namespace shock_audio {
                                     checkDifference(node->getLeftPtr()));
 
         return std::max(maxWithLeft, checkDifference(node->getRightPtr()));
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeMap<KEY_TYPE, DATA_TYPE>::isContain(std::pair<KEY_TYPE, KEY_TYPE> range,
+                                                         shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
+        return range.first <= node->getFrom() && range.second <= node->getTo();
     }
 }

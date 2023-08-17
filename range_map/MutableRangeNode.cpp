@@ -1,7 +1,7 @@
 #include "MutableRangeNode.h"
 #include "exceptions/InvalidRangeException.h"
 
-namespace shock_audio {
+namespace shock_audio_impl {
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     MutableRangeNode<KEY_TYPE, DATA_TYPE>::MutableRangeNode(std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value,
@@ -56,8 +56,8 @@ namespace shock_audio {
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     void MutableRangeNode<KEY_TYPE, DATA_TYPE>::assertRange(KEY_TYPE from, KEY_TYPE to) {
-        if (from > to)
-            throw InvalidRangeException();
+        if (from >= to && from != NULL && to != NULL)
+            throw shock_audio::InvalidRangeException();
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
@@ -120,13 +120,13 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    RangeNode<KEY_TYPE, DATA_TYPE> *MutableRangeNode<KEY_TYPE, DATA_TYPE>::getLeft() const {
-        return static_cast<RangeNode<KEY_TYPE, DATA_TYPE>*>(_left.get());
+    shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> *MutableRangeNode<KEY_TYPE, DATA_TYPE>::getLeft() const {
+        return static_cast<shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>*>(_left.get());
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    RangeNode<KEY_TYPE, DATA_TYPE> *MutableRangeNode<KEY_TYPE, DATA_TYPE>::getRight() const {
-        return static_cast<RangeNode<KEY_TYPE, DATA_TYPE>*>(_right.get());
+    shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> *MutableRangeNode<KEY_TYPE, DATA_TYPE>::getRight() const {
+        return static_cast<shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>*>(_right.get());
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
@@ -171,7 +171,7 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isOverlap(const RangeNode<KEY_TYPE, DATA_TYPE>& other) const {
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isOverlap(const shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>& other) const {
         auto otherFrom = other.getFrom();
         auto otherTo = other.getTo();
         return _from <= otherTo && _from >= otherFrom
@@ -202,8 +202,61 @@ namespace shock_audio {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isOverlap(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE> &other) const {
+        auto otherFrom = other.getFrom();
+        auto otherTo = other.getTo();
+        return _from <= otherTo && _from >= otherFrom
+               || _to <= otherTo && _to >= otherFrom
+               || _from <= otherFrom && _to >= otherTo
+               || otherFrom <= _from && otherTo >= _to;
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool
+    MutableRangeNode<KEY_TYPE, DATA_TYPE>::isContain(const shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> &other) const {
+        return _from <= other.getFrom() && _to >= other.getTo();
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isContain(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE> &other) const {
+        return _from <= other.getFrom() && _to >= other.getTo();
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isContain(KEY_TYPE from, KEY_TYPE to) const {
+        return _from <= from && _to >= to;
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isContain(std::pair<KEY_TYPE, KEY_TYPE> range) const {
+        return _from <= range.first && _to >= range.second;
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
     void MutableRangeNode<KEY_TYPE, DATA_TYPE>::addValue(DATA_TYPE value) {
         _value.push_back(value);
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isEqualRange(
+            const shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> &other) const {
+        return _from == other.getFrom() && _to == other.getTo();
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isEqualRange(
+            const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE> &other) const {
+        return _from == other.getFrom() && _to == other.getTo();
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isEqualRange(KEY_TYPE from, KEY_TYPE to) const {
+        return _from == from && _to == to;
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isEqualRange(std::pair<KEY_TYPE, KEY_TYPE> range) const {
+        return _from == range.first && _to == range.second;
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>

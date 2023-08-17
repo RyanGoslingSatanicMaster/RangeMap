@@ -4,20 +4,14 @@
 #include <utility>
 #include <vector>
 #include <memory>
+#include "RangeItem.h"
 
 namespace shock_audio{
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    class RangeNode {
+    class RangeNode: public RangeItem<KEY_TYPE, DATA_TYPE> {
 
     public:
-        virtual std::pair<KEY_TYPE, KEY_TYPE> getRange() const = 0;
-
-        virtual std::vector<DATA_TYPE> getValue() const = 0;
-
-        virtual KEY_TYPE getFrom() const = 0;
-
-        virtual KEY_TYPE getTo() const = 0;
 
         virtual RangeNode* getLeft() const = 0;
 
@@ -25,11 +19,10 @@ namespace shock_audio{
 
         virtual bool isOverlap(const RangeNode<KEY_TYPE, DATA_TYPE>& other) const = 0;
 
-        virtual bool isOverlap(KEY_TYPE other) const = 0;
+        virtual bool isContain(const RangeNode<KEY_TYPE, DATA_TYPE>& other) const = 0;
 
-        virtual bool isOverlap(std::pair<KEY_TYPE, KEY_TYPE> range) const = 0;
+        virtual bool isEqualRange(const RangeNode<KEY_TYPE, DATA_TYPE>& other) const = 0;
 
-        virtual bool isOverlap(KEY_TYPE from, KEY_TYPE to) const = 0;
     };
 
 }

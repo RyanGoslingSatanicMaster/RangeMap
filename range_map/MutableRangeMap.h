@@ -39,11 +39,17 @@ namespace shock_audio {
 
         void put(std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value);
 
-        void removeFirstByRange(std::pair<KEY_TYPE, KEY_TYPE> range);
+        void removeFirstByOverlapRange(std::pair<KEY_TYPE, KEY_TYPE> range);
 
-        void removeByRange(std::pair<KEY_TYPE, KEY_TYPE> range, unsigned int count);
+        void removeFirstByContainRange(std::pair<KEY_TYPE, KEY_TYPE> range);
 
-        void removeAllInRange(std::pair<KEY_TYPE, KEY_TYPE> range);
+        void removeByOverlapRange(std::pair<KEY_TYPE, KEY_TYPE> range, unsigned int count);
+
+        void removeByContainRange(std::pair<KEY_TYPE, KEY_TYPE> range, unsigned int count);
+
+        void removeAllByOverlapRange(std::pair<KEY_TYPE, KEY_TYPE> range);
+
+        void removeAllByContainRange(std::pair<KEY_TYPE, KEY_TYPE> range);
 
         void removeFirstByKey(KEY_TYPE key);
 
@@ -65,9 +71,9 @@ namespace shock_audio {
 
         std::unique_ptr<MutableRangeMap<KEY_TYPE, DATA_TYPE>> split(std::pair<KEY_TYPE, KEY_TYPE> range, bool isByOverlap);
 
-        MutableRangeNode<KEY_TYPE, DATA_TYPE>* getMaxNode();
+        shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* getMaxNode();
 
-        MutableRangeNode<KEY_TYPE, DATA_TYPE>* getMinNode();
+        shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* getMinNode();
 
         int getBalanceDifference();
 
@@ -78,47 +84,53 @@ namespace shock_audio {
         void printTree();
 
     private:
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> _root{nullptr};
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> _root{nullptr};
 
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> insert(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value);
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> insert(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value);
 
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> rebalanceTreeAfterInsert(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> rebalanceTreeAfterInsert(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
 
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> rebalanceTreeAfterDelete(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> rebalanceTreeAfterDelete(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
 
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> successorDelete(MutableRangeNode<KEY_TYPE, DATA_TYPE> *root, std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> successorDelete(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *root, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
 
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> leftLeftRotate(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> leftLeftRotate(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
 
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> leftRightRotate(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> leftRightRotate(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
 
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> rightLeftRotate(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> rightLeftRotate(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
 
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> rightRightRotate(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> rightRightRotate(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
 
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> switchColors(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> switchColors(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
 
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> checkIfRootDoubleBlackOrRed(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
+        std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> checkIfRootDoubleBlackOrRed(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node);
 
-        std::pair<bool, std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>>> removeByRangeRecur(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::pair<KEY_TYPE, KEY_TYPE> range);
+        std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> removeByRangeRecur(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::pair<KEY_TYPE, KEY_TYPE> range);
 
-        bool isNullNode(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
+        std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> removeByOverlapRangeRecur(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::pair<KEY_TYPE, KEY_TYPE> range);
 
+        std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> removeByContainRangeRecur(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::pair<KEY_TYPE, KEY_TYPE> range);
 
+        std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> removeByKeyRecur(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, KEY_TYPE key);
 
-        void updateMax(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
+        bool isNullNode(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
 
-        void updateColorsBeforeDelete(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
+        void updateMax(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
 
-        BalanceCaseInsert checkBalanceCaseAfterInsert(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
+        void updateColorsBeforeDelete(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
 
-        BalanceCaseDelete checkBalanceCaseAfterDelete(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
+        BalanceCaseInsert checkBalanceCaseAfterInsert(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
 
-        void printTreeRecurrent(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node, int space);
+        BalanceCaseDelete checkBalanceCaseAfterDelete(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
 
-        int getDepth(MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
+        void printTreeRecurrent(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node, int space);
 
-        int checkDifference(MutableRangeNode<KEY_TYPE, DATA_TYPE>* node);
+        int getDepth(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
+
+        int checkDifference(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node);
+
+        bool isContain(std::pair<KEY_TYPE, KEY_TYPE> range, shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node);
 
     };
 

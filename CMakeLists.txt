@@ -14,4 +14,4 @@ add_executable(
         range_map/MutableRangeNode.cpp
         range_map/RangeMap.h
         main.cpp
-)
+        range_map/RangeItem.h)

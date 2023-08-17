@@ -4,14 +4,14 @@
 
 #include "RangeNode.h"
 
-namespace shock_audio {
+namespace shock_audio_impl {
 
     enum class Color{
         RED, BLACK, DOUBLE_BLACK
     };
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    class MutableRangeNode: public RangeNode<KEY_TYPE, DATA_TYPE> {
+class MutableRangeNode: public shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> {
     public:
 
         MutableRangeNode() = delete;
@@ -62,7 +62,7 @@ namespace shock_audio {
 
         std::vector<DATA_TYPE> getValue() const override;
 
-        bool isOverlap(const RangeNode<KEY_TYPE, DATA_TYPE>& other) const override;
+        bool isOverlap(const shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>& other) const override;
 
         bool isOverlap(KEY_TYPE other) const override;
 
@@ -70,9 +70,27 @@ namespace shock_audio {
 
         bool isOverlap(KEY_TYPE from, KEY_TYPE to) const override;
 
-        RangeNode<KEY_TYPE, DATA_TYPE>* getLeft() const override;
+        bool isOverlap(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE>& other) const override;
 
-        RangeNode<KEY_TYPE, DATA_TYPE>* getRight() const override;
+        bool isContain(std::pair<KEY_TYPE, KEY_TYPE> range) const override;
+
+        bool isContain(KEY_TYPE from, KEY_TYPE to) const override;
+
+        bool isContain(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE>& other) const override;
+
+        bool isContain(const shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>& other) const override;
+
+        bool isEqualRange(std::pair<KEY_TYPE, KEY_TYPE> range) const override;
+
+        bool isEqualRange(KEY_TYPE from, KEY_TYPE to) const override;
+
+        bool isEqualRange(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE>& other) const override;
+
+        bool isEqualRange(const shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>& other) const override;
+
+        shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>* getLeft() const override;
+
+        shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>* getRight() const override;
 
         void setLeft(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> left);
 
@@ -99,7 +117,6 @@ namespace shock_audio {
 
         void assertRange(KEY_TYPE from, KEY_TYPE to);
     };
-
 
 }
 
