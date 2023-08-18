@@ -24,6 +24,13 @@ std::ostream &operator <<(std::ostream& output, const std::vector<DATA_TYPE>& va
  * 9). RRED +
  * 10). Root +
  * 11). Successor +
+ * 12). removeAllByOverlapRange +
+ * 13). removeAllByContainRange +
+ * 14). removeByContainRange +
+ * 14). removeAllByKey +
+ * 15). removeByKey +
+ * 16). removeByValue +
+ * 17). removeAllByValue +
  */
 int main() {
     auto t = new shock_audio::MutableRangeMap<int, char>();
@@ -63,8 +70,9 @@ int main() {
     t->put(62, 65, 'k');
     t->put(23, 123, 'l');
     t->put(3, 44, 'd');
-    t->removeAllByKey(40);
-//    t->removeAllByOverlapRange(std::pair(75, 120));
+    t->printTree();
+    std::cout<<std::endl<<"________"<<std::endl;
+    t->removeByValue('k', 2);
     t->printTree();
 //    std::cout<<std::endl;
 //    std::cout<<"MaxDepth:"<<t->getMaxDepth();

@@ -17,7 +17,19 @@ namespace shock_audio{
 
         virtual std::vector<DATA_TYPE> get(KEY_TYPE from, KEY_TYPE to) const = 0;
 
+        virtual std::vector<DATA_TYPE> get(KEY_TYPE key, unsigned int count) const = 0;
+
+        virtual std::vector<DATA_TYPE> get(KEY_TYPE from, KEY_TYPE to, unsigned int count) const = 0;
+
+        virtual std::vector<DATA_TYPE> getAll(KEY_TYPE key) const = 0;
+
+        virtual std::vector<DATA_TYPE> getAll(KEY_TYPE from, KEY_TYPE to) const = 0;
+
         virtual std::vector<DATA_TYPE> getBy(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate) const = 0;
+
+        virtual std::vector<DATA_TYPE> getBy(unsigned int count, std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate) const = 0;
+
+        virtual std::vector<DATA_TYPE> getAllBy(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate) const = 0;
 
     };
 

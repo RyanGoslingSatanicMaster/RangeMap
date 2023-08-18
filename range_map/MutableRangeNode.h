@@ -6,12 +6,12 @@
 
 namespace shock_audio_impl {
 
-    enum class Color{
+    enum class Color {
         RED, BLACK, DOUBLE_BLACK
     };
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-class MutableRangeNode: public shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> {
+    class MutableRangeNode: public shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> {
     public:
 
         MutableRangeNode() = delete;
@@ -27,10 +27,12 @@ class MutableRangeNode: public shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> {
         explicit MutableRangeNode(std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value, Color color);
 
         explicit MutableRangeNode(std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value,
-                std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> left, std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> right);
+                                  std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> left,
+                                  std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> right);
 
         explicit MutableRangeNode(KEY_TYPE from, KEY_TYPE to, DATA_TYPE value,
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> left, std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> right);
+                                  std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> left,
+                                  std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> right);
 
         void setMax(KEY_TYPE max);
 
@@ -54,15 +56,37 @@ class MutableRangeNode: public shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> {
 
         Color getColor();
 
+        bool isOverlap(const shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> &other) const override;
+
+        bool isContain(const shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> &other) const override;
+
+        bool isEqualRange(const shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> &other) const override;
+
+        shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> *getLeft() const override;
+
+        shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> *getRight() const override;
+
+        void setLeft(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> left);
+
+        void setRight(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> right);
+
+        MutableRangeNode<KEY_TYPE, DATA_TYPE> *getRightPtr();
+
+        MutableRangeNode<KEY_TYPE, DATA_TYPE> *getLeftPtr();
+
+        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> getRightUniquePtr();
+
+        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> getLeftUniquePtr();
+
+        static std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> generateNULLNode();
+
         std::pair<KEY_TYPE, KEY_TYPE> getRange() const override;
+
+        std::vector<DATA_TYPE> getValue() const override;
 
         KEY_TYPE getFrom() const override;
 
         KEY_TYPE getTo() const override;
-
-        std::vector<DATA_TYPE> getValue() const override;
-
-        bool isOverlap(const shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>& other) const override;
 
         bool isOverlap(KEY_TYPE other) const override;
 
@@ -70,48 +94,27 @@ class MutableRangeNode: public shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> {
 
         bool isOverlap(KEY_TYPE from, KEY_TYPE to) const override;
 
-        bool isOverlap(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE>& other) const override;
+        bool isOverlap(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE> &other) const override;
 
         bool isContain(std::pair<KEY_TYPE, KEY_TYPE> range) const override;
 
         bool isContain(KEY_TYPE from, KEY_TYPE to) const override;
 
-        bool isContain(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE>& other) const override;
-
-        bool isContain(const shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>& other) const override;
+        bool isContain(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE> &other) const override;
 
         bool isEqualRange(std::pair<KEY_TYPE, KEY_TYPE> range) const override;
 
         bool isEqualRange(KEY_TYPE from, KEY_TYPE to) const override;
 
-        bool isEqualRange(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE>& other) const override;
+        bool isEqualRange(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE> &other) const override;
 
-        bool isEqualRange(const shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>& other) const override;
+        bool containValue(DATA_TYPE value) const override;
 
-        shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>* getLeft() const override;
-
-        shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>* getRight() const override;
-
-        void setLeft(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> left);
-
-        void setRight(std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> right);
-
-        MutableRangeNode<KEY_TYPE, DATA_TYPE>* getRightPtr();
-
-        MutableRangeNode<KEY_TYPE, DATA_TYPE>* getLeftPtr();
-
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> getRightUniquePtr();
-
-        std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> getLeftUniquePtr();
-
-        static std::unique_ptr<MutableRangeNode<KEY_TYPE,DATA_TYPE>> generateNULLNode();
+        int containCount(DATA_TYPE value) const override;
 
     private:
-        KEY_TYPE _from;
-        KEY_TYPE _to;
         KEY_TYPE _max;
         Color _color{Color::BLACK};
-        std::vector<DATA_TYPE> _value;
         std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> _left{nullptr};
         std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> _right{nullptr};
 

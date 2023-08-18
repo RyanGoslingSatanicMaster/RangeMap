@@ -10,33 +10,54 @@ namespace shock_audio{
     class RangeItem {
 
     public:
-        virtual std::pair<KEY_TYPE, KEY_TYPE> getRange() const = 0;
 
-        virtual std::vector<DATA_TYPE> getValue() const = 0;
+        RangeItem() = delete;
 
-        virtual KEY_TYPE getFrom() const = 0;
+        RangeItem(RangeItem<KEY_TYPE, DATA_TYPE> const &item);
 
-        virtual KEY_TYPE getTo() const = 0;
+        explicit RangeItem(KEY_TYPE from, KEY_TYPE to, DATA_TYPE value);
 
-        virtual bool isOverlap(KEY_TYPE other) const = 0;
+        explicit RangeItem(std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value);
 
-        virtual bool isOverlap(std::pair<KEY_TYPE, KEY_TYPE> range) const = 0;
+        virtual std::pair<KEY_TYPE, KEY_TYPE> getRange() const;
 
-        virtual bool isOverlap(KEY_TYPE from, KEY_TYPE to) const = 0;
+        virtual std::vector<DATA_TYPE> getValue() const;
 
-        virtual bool isOverlap(const RangeItem<KEY_TYPE, DATA_TYPE>& other) const = 0;
+        virtual KEY_TYPE getFrom() const;
 
-        virtual bool isContain(std::pair<KEY_TYPE, KEY_TYPE> range) const = 0;
+        virtual KEY_TYPE getTo() const;
 
-        virtual bool isContain(KEY_TYPE from, KEY_TYPE to) const = 0;
+        virtual bool isOverlap(KEY_TYPE other) const;
 
-        virtual bool isContain(const RangeItem<KEY_TYPE, DATA_TYPE>& other) const = 0;
+        virtual bool isOverlap(std::pair<KEY_TYPE, KEY_TYPE> range) const;
 
-        virtual bool isEqualRange(std::pair<KEY_TYPE, KEY_TYPE> range) const = 0;
+        virtual bool isOverlap(KEY_TYPE from, KEY_TYPE to) const;
 
-        virtual bool isEqualRange(KEY_TYPE from, KEY_TYPE to) const = 0;
+        virtual bool isOverlap(const RangeItem<KEY_TYPE, DATA_TYPE>& other) const;
 
-        virtual bool isEqualRange(const RangeItem<KEY_TYPE, DATA_TYPE>& other) const = 0;
+        virtual bool isContain(std::pair<KEY_TYPE, KEY_TYPE> range) const;
+
+        virtual bool isContain(KEY_TYPE from, KEY_TYPE to) const;
+
+        virtual bool isContain(const RangeItem<KEY_TYPE, DATA_TYPE>& other) const;
+
+        virtual bool isEqualRange(std::pair<KEY_TYPE, KEY_TYPE> range) const;
+
+        virtual bool isEqualRange(KEY_TYPE from, KEY_TYPE to) const;
+
+        virtual bool isEqualRange(const RangeItem<KEY_TYPE, DATA_TYPE>& other) const;
+
+        virtual bool containValue(DATA_TYPE value) const;
+
+        virtual int containCount(DATA_TYPE value) const;
+
+    protected:
+        KEY_TYPE _from;
+        KEY_TYPE _to;
+        std::vector<DATA_TYPE> _value;
+
+    private:
+        void assertRange(KEY_TYPE from, KEY_TYPE to);
 
     };
 

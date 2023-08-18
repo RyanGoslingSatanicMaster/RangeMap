@@ -33,15 +33,29 @@ namespace shock_audio {
 
         std::vector<DATA_TYPE> get(KEY_TYPE from, KEY_TYPE to) const override;
 
+        std::vector<DATA_TYPE> get(KEY_TYPE key, unsigned int count) const override;
+
+        std::vector<DATA_TYPE> get(KEY_TYPE from, KEY_TYPE to, unsigned int count) const override;
+
+        std::vector<DATA_TYPE> getAll(KEY_TYPE key) const override;
+
+        std::vector<DATA_TYPE> getAll(KEY_TYPE from, KEY_TYPE to) const override;
+
         std::vector<DATA_TYPE> getBy(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate) const override;
+
+        std::vector<DATA_TYPE> getBy(unsigned int count, std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate) const override;
+
+        std::vector<DATA_TYPE> getAllBy(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate) const override;
 
         void put(KEY_TYPE from, KEY_TYPE to, DATA_TYPE value);
 
         void put(std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value);
 
-        void removeFirstByOverlapRange(std::pair<KEY_TYPE, KEY_TYPE> range);
+        void removeByOverlapRange(std::pair<KEY_TYPE, KEY_TYPE> range);
 
-        void removeFirstByContainRange(std::pair<KEY_TYPE, KEY_TYPE> range);
+        void removeByContainRange(std::pair<KEY_TYPE, KEY_TYPE> range);
+
+        void removeByRange(std::pair<KEY_TYPE, KEY_TYPE> range);
 
         void removeByOverlapRange(std::pair<KEY_TYPE, KEY_TYPE> range, unsigned int count);
 
@@ -51,7 +65,7 @@ namespace shock_audio {
 
         void removeAllByContainRange(std::pair<KEY_TYPE, KEY_TYPE> range);
 
-        void removeFirstByKey(KEY_TYPE key);
+        void removeByKey(KEY_TYPE key);
 
         void removeByKey(KEY_TYPE key, unsigned int count);
 
@@ -59,11 +73,15 @@ namespace shock_audio {
 
         void removeIf(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate);
 
-        void removeFirstByValue(DATA_TYPE val);
+        void removeAllIf(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate);
+
+        void removeIf(unsigned int count, std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate);
+
+        void removeByValue(DATA_TYPE val);
 
         void removeByValue(DATA_TYPE val, unsigned int count);
 
-        void removaAllByValue(DATA_TYPE val);
+        void removeAllByValue(DATA_TYPE val);
 
         void merge(MutableRangeMap<KEY_TYPE, DATA_TYPE> &map);
 
@@ -71,9 +89,9 @@ namespace shock_audio {
 
         std::unique_ptr<MutableRangeMap<KEY_TYPE, DATA_TYPE>> split(std::pair<KEY_TYPE, KEY_TYPE> range, bool isByOverlap);
 
-        shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* getMaxNode();
+        RangeNode<KEY_TYPE, DATA_TYPE>* getMaxNode();
 
-        shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* getMinNode();
+        RangeNode<KEY_TYPE, DATA_TYPE>* getMinNode();
 
         int getBalanceDifference();
 
@@ -113,6 +131,10 @@ namespace shock_audio {
         std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> removeByContainRangeRecur(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::pair<KEY_TYPE, KEY_TYPE> range);
 
         std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> removeByKeyRecur(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, KEY_TYPE key);
+
+        std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> removeByValueRecur(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, DATA_TYPE key);
+
+        std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> removeIfRecur(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate);
 
         bool isNullNode(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
 
