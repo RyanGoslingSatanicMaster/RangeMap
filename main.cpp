@@ -1,5 +1,6 @@
 #include <iostream>
 #include "range_map/MutableRangeMap.cpp"
+#include "tests/GetTests.cpp"
 
 template<typename DATA_TYPE>
 std::ostream &operator <<(std::ostream& output, const std::vector<DATA_TYPE>& value)
@@ -58,24 +59,25 @@ int main() {
 //    t->removeFirstByRange(std::pair(10, 10));
 //    t->removeFirstByRange(std::pair(2, 2));
 //    t->removeFirstByRange(std::pair(11, 11));
-    t->put(3, 44, 'n');
-    t->put(3, 34, 'd');
-    t->put(31, 75, 'm');
-    t->put(62, 65, 'k');
-    t->put(1, 11, 'd');
-    t->put(11, 54, 's');
-    t->put(3, 44, 'n');
-    t->put(3, 34, 'd');
-    t->put(31, 75, 'm');
-    t->put(62, 65, 'k');
-    t->put(23, 123, 'l');
-    t->put(3, 44, 'd');
-    t->printTree();
-    std::cout<<std::endl<<"________"<<std::endl;
-    t->removeByValue('k', 2);
-    t->printTree();
+//    t->put(3, 44, 'n');
+//    t->put(3, 34, 'd');
+//    t->put(31, 75, 'm');
+//    t->put(62, 65, 'k');
+//    t->put(1, 11, 'd');
+//    t->put(11, 54, 's');
+//    t->put(3, 44, 'n');
+//    t->put(3, 34, 'd');
+//    t->put(31, 75, 'm');
+//    t->put(62, 65, 'k');
+//    t->put(23, 123, 'l');
+//    t->put(3, 44, 'd');
+//    t->printTree();
+//    std::cout<<std::endl<<"________"<<std::endl;
+//    t->removeByValue('k', 2);
+//    t->printTree();
 //    std::cout<<std::endl;
 //    std::cout<<"MaxDepth:"<<t->getMaxDepth();
 //    std::cout<<"BalanceFactor:"<<t->getBalanceDifference();
+    TestCaseGet();
     return 0;
 }

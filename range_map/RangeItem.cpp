@@ -58,10 +58,12 @@ namespace shock_audio {
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     bool RangeItem<KEY_TYPE, DATA_TYPE>::isOverlap(std::pair<KEY_TYPE, KEY_TYPE> range) const {
-        return _from <= range.second && _from >= range.first
-               || _to <= range.second && _to >= range.first
-               || _from <= range.first && _to >= range.second
-               || range.first <= _from && range.second >= _to;
+        return isOverlap(range.first, range.second);
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool RangeItem<KEY_TYPE, DATA_TYPE>::operator==(const RangeItem<KEY_TYPE, DATA_TYPE> &other) {
+        return isEqualRange(other.getFrom(), other.getTo()) && other.getValue() == _value;
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
@@ -74,17 +76,12 @@ namespace shock_audio {
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     bool RangeItem<KEY_TYPE, DATA_TYPE>::isOverlap(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE> &other) const {
-        auto otherFrom = other.getFrom();
-        auto otherTo = other.getTo();
-        return _from <= otherTo && _from >= otherFrom
-               || _to <= otherTo && _to >= otherFrom
-               || _from <= otherFrom && _to >= otherTo
-               || otherFrom <= _from && otherTo >= _to;
+        return isOverlap(other.getFrom(), other.getTo());
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     bool RangeItem<KEY_TYPE, DATA_TYPE>::isContain(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE> &other) const {
-        return _from <= other.getFrom() && _to >= other.getTo();
+        return isContain(other.getFrom(), other.getTo());
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
@@ -94,13 +91,13 @@ namespace shock_audio {
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     bool RangeItem<KEY_TYPE, DATA_TYPE>::isContain(std::pair<KEY_TYPE, KEY_TYPE> range) const {
-        return _from <= range.first && _to >= range.second;
+        return isContain(range.first, range.second);
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     bool RangeItem<KEY_TYPE, DATA_TYPE>::isEqualRange(
             const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE> &other) const {
-        return _from == other.getFrom() && _to == other.getTo();
+        return isEqualRange(other.getFrom(), other.getTo());
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
@@ -110,7 +107,7 @@ namespace shock_audio {
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     bool RangeItem<KEY_TYPE, DATA_TYPE>::isEqualRange(std::pair<KEY_TYPE, KEY_TYPE> range) const {
-        return _from == range.first && _to == range.second;
+        return isEqualRange(range.first, range.second);
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>

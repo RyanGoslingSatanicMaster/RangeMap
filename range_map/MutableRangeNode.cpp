@@ -286,6 +286,12 @@ namespace shock_audio_impl {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::operator==(const MutableRangeNode<KEY_TYPE, DATA_TYPE> &other) {
+        return shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>::operator==((shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>) other) &&
+                _max == other.getMax() && _color == other.getColor();
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
     void MutableRangeNode<KEY_TYPE, DATA_TYPE>::assertRange(KEY_TYPE from, KEY_TYPE to) {
         if (from >= to && from != NULL && to != NULL)
             throw shock_audio::InvalidRangeException();

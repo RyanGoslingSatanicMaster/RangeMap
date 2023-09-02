@@ -93,4 +93,10 @@ namespace shock_audio {
     int RangeNode<KEY_TYPE, DATA_TYPE>::containCount(DATA_TYPE value) const {
         return RangeItem<KEY_TYPE, DATA_TYPE>::containCount(value);
     }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool RangeNode<KEY_TYPE, DATA_TYPE>::operator==(const RangeNode<KEY_TYPE, DATA_TYPE> &other) {
+        return RangeItem<KEY_TYPE, DATA_TYPE>::operator==((RangeItem<KEY_TYPE, DATA_TYPE>) other) &&
+               getLeft() == other.getLeft() && getRight() == other.getRight();
+    }
 }

@@ -51,6 +51,8 @@ namespace shock_audio{
 
         virtual int containCount(DATA_TYPE value) const;
 
+        bool operator==(const RangeItem<KEY_TYPE, DATA_TYPE>& other);
+
     protected:
         KEY_TYPE _from;
         KEY_TYPE _to;

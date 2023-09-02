@@ -63,6 +63,8 @@ namespace shock_audio{
 
         int containCount(DATA_TYPE value) const override;
 
+        bool operator==(const RangeNode<KEY_TYPE, DATA_TYPE>& other);
+
     };
 
 }

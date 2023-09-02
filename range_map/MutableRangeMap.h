@@ -29,23 +29,21 @@ namespace shock_audio {
 
         explicit MutableRangeMap(std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value);
 
-        std::vector<DATA_TYPE> get(KEY_TYPE key) const override;
+        std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> get(KEY_TYPE key, unsigned int count) const override;
 
-        std::vector<DATA_TYPE> get(KEY_TYPE from, KEY_TYPE to) const override;
+        std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getBy(unsigned int count, std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>*)> predicate) const override;
 
-        std::vector<DATA_TYPE> get(KEY_TYPE key, unsigned int count) const override;
+        std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getByOverlap(KEY_TYPE from, KEY_TYPE to, unsigned int count) const override;
 
-        std::vector<DATA_TYPE> get(KEY_TYPE from, KEY_TYPE to, unsigned int count) const override;
+        std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getByContain(KEY_TYPE from, KEY_TYPE to, unsigned int count) const override;
 
-        std::vector<DATA_TYPE> getAll(KEY_TYPE key) const override;
+        std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getAll(KEY_TYPE key) const override;
 
-        std::vector<DATA_TYPE> getAll(KEY_TYPE from, KEY_TYPE to) const override;
+        std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getAllByOverlap(KEY_TYPE from, KEY_TYPE to) const override;
 
-        std::vector<DATA_TYPE> getBy(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate) const override;
+        std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getAllByContain(KEY_TYPE from, KEY_TYPE to) const override;
 
-        std::vector<DATA_TYPE> getBy(unsigned int count, std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate) const override;
-
-        std::vector<DATA_TYPE> getAllBy(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate) const override;
+        std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getAllBy(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>*)> predicate) const override;
 
         void put(KEY_TYPE from, KEY_TYPE to, DATA_TYPE value);
 
@@ -89,17 +87,17 @@ namespace shock_audio {
 
         std::unique_ptr<MutableRangeMap<KEY_TYPE, DATA_TYPE>> split(std::pair<KEY_TYPE, KEY_TYPE> range, bool isByOverlap);
 
-        RangeNode<KEY_TYPE, DATA_TYPE>* getMaxNode();
+        RangeNode<KEY_TYPE, DATA_TYPE>* getMaxNode() const override;
 
-        RangeNode<KEY_TYPE, DATA_TYPE>* getMinNode();
+        RangeNode<KEY_TYPE, DATA_TYPE>* getMinNode() const override;
 
-        int getBalanceDifference();
+        int getBalanceDifference() const override;
 
-        int getMaxDepth();
+        int getBlackDepth() const override;
 
-        RangeNode<KEY_TYPE, DATA_TYPE>* getRoot();
+        RangeNode<KEY_TYPE, DATA_TYPE>* getRoot() const override;
 
-        void printTree();
+        void printTree() const override;
 
     private:
         std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> _root{nullptr};
@@ -136,6 +134,26 @@ namespace shock_audio {
 
         std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> removeIfRecur(std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> node, std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate);
 
+        void getByOverlapRecur(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node, std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> *list, std::pair<KEY_TYPE, KEY_TYPE> range, unsigned int* count) const;
+
+        void getByContainRecur(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node, std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> *list, std::pair<KEY_TYPE, KEY_TYPE> range, unsigned int* count) const;
+
+        void getRecur(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node, std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> *list, KEY_TYPE key, unsigned int* count) const;
+
+        void getByRecur(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node, std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> *list, std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>*)> predicate, unsigned int* count) const;
+
+        void getAllByOverlapRecur(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node, std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> *list, std::pair<KEY_TYPE, KEY_TYPE> range) const;
+
+        void getAllByContainRecur(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node, std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> *list, std::pair<KEY_TYPE, KEY_TYPE> range) const;
+
+        void getAllRecur(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node, std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> *list, KEY_TYPE key) const;
+
+        void getAllByRecur(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node, std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> *list, std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>*)> predicate) const;
+
+        shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* getMaxNode(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) const;
+
+        shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* getMinNode(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) const;
+
         bool isNullNode(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
 
         void updateMax(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
@@ -146,13 +164,13 @@ namespace shock_audio {
 
         BalanceCaseDelete checkBalanceCaseAfterDelete(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
 
-        void printTreeRecurrent(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node, int space);
+        void printTreeRecurrent(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node, int space) const;
 
-        int getDepth(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
+        int getDepth(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) const;
 
-        int checkDifference(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node);
+        int checkDifference(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node) const;
 
-        bool isContain(std::pair<KEY_TYPE, KEY_TYPE> range, shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node);
+        bool isContain(std::pair<KEY_TYPE, KEY_TYPE> range, shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node) const;
 
     };
 

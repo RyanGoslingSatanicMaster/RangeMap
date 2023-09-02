@@ -112,6 +112,8 @@ namespace shock_audio_impl {
 
         int containCount(DATA_TYPE value) const override;
 
+        bool operator==(const MutableRangeNode<KEY_TYPE, DATA_TYPE>& other);
+
     private:
         KEY_TYPE _max;
         Color _color{Color::BLACK};

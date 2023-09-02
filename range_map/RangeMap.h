@@ -13,23 +13,33 @@ namespace shock_audio{
     class RangeMap{
 
     public:
-        virtual std::vector<DATA_TYPE> get(KEY_TYPE key) const = 0;
+        virtual std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> get(KEY_TYPE key, unsigned int count) const = 0;
 
-        virtual std::vector<DATA_TYPE> get(KEY_TYPE from, KEY_TYPE to) const = 0;
+        virtual std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*>getByOverlap(KEY_TYPE from, KEY_TYPE to, unsigned int count) const = 0;
 
-        virtual std::vector<DATA_TYPE> get(KEY_TYPE key, unsigned int count) const = 0;
+        virtual std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getByContain(KEY_TYPE from, KEY_TYPE to, unsigned int count) const = 0;
 
-        virtual std::vector<DATA_TYPE> get(KEY_TYPE from, KEY_TYPE to, unsigned int count) const = 0;
+        virtual std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getBy(unsigned int count, std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>*)> predicate) const = 0;
 
-        virtual std::vector<DATA_TYPE> getAll(KEY_TYPE key) const = 0;
+        virtual std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getAll(KEY_TYPE key) const = 0;
 
-        virtual std::vector<DATA_TYPE> getAll(KEY_TYPE from, KEY_TYPE to) const = 0;
+        virtual std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getAllByOverlap(KEY_TYPE from, KEY_TYPE to) const = 0;
 
-        virtual std::vector<DATA_TYPE> getBy(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate) const = 0;
+        virtual std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getAllByContain(KEY_TYPE from, KEY_TYPE to) const = 0;
 
-        virtual std::vector<DATA_TYPE> getBy(unsigned int count, std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate) const = 0;
+        virtual std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getAllBy(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>*)> predicate) const = 0;
 
-        virtual std::vector<DATA_TYPE> getAllBy(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>&)> predicate) const = 0;
+        virtual RangeNode<KEY_TYPE, DATA_TYPE>* getMaxNode() const = 0;
+
+        virtual RangeNode<KEY_TYPE, DATA_TYPE>* getMinNode() const = 0;
+
+        virtual int getBalanceDifference() const = 0;
+
+        virtual int getBlackDepth() const = 0;
+
+        virtual RangeNode<KEY_TYPE, DATA_TYPE>* getRoot() const = 0;
+
+        virtual void printTree() const = 0;
 
     };
 
