@@ -9,7 +9,8 @@ namespace shock_audio_impl {
                                                             Color color) :
             shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>(range, value),
             _color(color),
-            _max(range.second) {
+            _max(range.second),
+            _min(range.first){
         assertRange(range.first, range.second);
     }
 
@@ -17,7 +18,8 @@ namespace shock_audio_impl {
     MutableRangeNode<KEY_TYPE, DATA_TYPE>::MutableRangeNode(KEY_TYPE from, KEY_TYPE to, DATA_TYPE value, Color color) :
             shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>(from, to, value),
             _color(color),
-            _max(to){
+            _max(to),
+            _min(from){
         assertRange(from, to);
     }
 
@@ -27,19 +29,22 @@ namespace shock_audio_impl {
     _max(node._max),
     _color(node._color),
     _left(std::move(node._left)),
-    _right(std::move(node._right)) {}
+    _right(std::move(node._right)),
+    _min(node._min) {}
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     MutableRangeNode<KEY_TYPE, DATA_TYPE>::MutableRangeNode(KEY_TYPE from, KEY_TYPE to, DATA_TYPE value) :
             shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>(from, to, value),
-            _max(to){
+            _max(to),
+            _min(from){
         assertRange(from, to);
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     MutableRangeNode<KEY_TYPE, DATA_TYPE>::MutableRangeNode(std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value) :
             shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>(range, value),
-            _max(range.second) {
+            _max(range.second),
+            _min(range.first) {
         assertRange(range.first, range.second);
     }
 
@@ -50,7 +55,8 @@ namespace shock_audio_impl {
             shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>(from, to, value),
             _left(std::move(left)),
             _right(std::move(right)),
-            _max(to){
+            _max(to),
+            _min(from){
         assertRange(from, to);
     }
 
@@ -61,7 +67,8 @@ namespace shock_audio_impl {
             shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>(range, value),
             _left(std::move(left)),
             _right(std::move(right)),
-            _max(range.second) {
+            _max(range.second),
+            _min(range.first){
         assertRange(range.first, range.second);
     }
 
@@ -81,8 +88,23 @@ namespace shock_audio_impl {
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
-    KEY_TYPE MutableRangeNode<KEY_TYPE, DATA_TYPE>::getMax() {
+    void MutableRangeNode<KEY_TYPE, DATA_TYPE>::setMax(KEY_TYPE max) {
+        _max = max;
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    KEY_TYPE MutableRangeNode<KEY_TYPE, DATA_TYPE>::getMax() const {
         return _max;
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    KEY_TYPE MutableRangeNode<KEY_TYPE, DATA_TYPE>::getMin() const {
+        return _min;
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    void MutableRangeNode<KEY_TYPE, DATA_TYPE>::setMin(KEY_TYPE min) {
+        _min = min;
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
@@ -93,11 +115,6 @@ namespace shock_audio_impl {
     template<typename KEY_TYPE, typename DATA_TYPE>
     shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> *MutableRangeNode<KEY_TYPE, DATA_TYPE>::getRight() const {
         return static_cast<shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>*>(_right.get());
-    }
-
-    template<typename KEY_TYPE, typename DATA_TYPE>
-    void MutableRangeNode<KEY_TYPE, DATA_TYPE>::setMax(KEY_TYPE max) {
-        _max = max;
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
@@ -289,6 +306,34 @@ namespace shock_audio_impl {
     bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::operator==(const MutableRangeNode<KEY_TYPE, DATA_TYPE> &other) {
         return shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>::operator==((shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>) other) &&
                 _max == other.getMax() && _color == other.getColor();
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isOverlapMinMax(std::pair<KEY_TYPE, KEY_TYPE> range) const {
+        return isOverlapMinMax(range.first, range.second);
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isOverlapMinMax(KEY_TYPE from, KEY_TYPE to) const {
+        return _min <= to && _min >= from
+               || _max <= to && _max >= from
+               || _min <= from && _max >= to
+               || from <= _min && to >= _max;
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isOverlapMinMax(KEY_TYPE key) const {
+        return _min <= key && _max >= key;
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isContainMinMax(std::pair<KEY_TYPE, KEY_TYPE> range) const {
+        return isContainMinMax(range.first, range.second);
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    bool MutableRangeNode<KEY_TYPE, DATA_TYPE>::isContainMinMax(KEY_TYPE from, KEY_TYPE to) const {
+        return _min <= from && _max >= to;
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>

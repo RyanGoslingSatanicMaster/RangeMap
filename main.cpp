@@ -1,16 +1,5 @@
-#include <iostream>
-#include "range_map/MutableRangeMap.cpp"
 #include "tests/GetTests.cpp"
-
-template<typename DATA_TYPE>
-std::ostream &operator <<(std::ostream& output, const std::vector<DATA_TYPE>& value)
-{
-    for (auto node: value)
-    {
-        output << node << " ";
-    }
-    return output;
-}
+#include "tests/InsertTests.cpp"
 
 /** Test Cases
  * Deletion:
@@ -34,7 +23,6 @@ std::ostream &operator <<(std::ostream& output, const std::vector<DATA_TYPE>& va
  * 17). removeAllByValue +
  */
 int main() {
-    auto t = new shock_audio::MutableRangeMap<int, char>();
 //    t->put(10, 10, 'a');
 //    t->put(35, 35, 'a');
 //    t->put(11, 11, 'd');
@@ -78,6 +66,7 @@ int main() {
 //    std::cout<<std::endl;
 //    std::cout<<"MaxDepth:"<<t->getMaxDepth();
 //    std::cout<<"BalanceFactor:"<<t->getBalanceDifference();
-    TestCaseGet();
+//    test::TestCaseGet();
+    test::TestCaseInsert();
     return 0;
 }

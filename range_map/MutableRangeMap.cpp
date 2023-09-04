@@ -131,10 +131,10 @@ namespace shock_audio {
             root->setValue(node->getLeftPtr()->getValue());
             updateColorsBeforeDelete(node->getLeftPtr());
             node->setLeft(node->getLeftUniquePtr()->getRightUniquePtr());
-            updateMax(node.get());
+            updateMinMax(node.get());
             return rebalanceTreeAfterDelete(std::move(node));
         }
-        updateMax(node.get());
+        updateMinMax(node.get());
         return rebalanceTreeAfterDelete(std::move(node));
     }
 
@@ -164,7 +164,7 @@ namespace shock_audio {
                     node->setValue(node->getRightPtr()->getValue());
                     updateColorsBeforeDelete(node->getRightPtr());
                     node->setRight(node->getRightPtr()->getRightUniquePtr());
-                    updateMax(node.get());
+                    updateMinMax(node.get());
                 } else {
                     node->setRight(successorDelete(node.get(), node->getRightUniquePtr()));
                 }
@@ -178,11 +178,11 @@ namespace shock_audio {
             if (range.first <= node->getFrom()) {
                 result = removeByContainRangeRecur(node->getLeftUniquePtr(), range);
                 node->setLeft(std::move(result.second));
-                updateMax(node.get());
+                updateMinMax(node.get());
             } else {
                 result = removeByContainRangeRecur(node->getRightUniquePtr(), range);
                 node->setRight(std::move(result.second));
-                updateMax(node.get());
+                updateMinMax(node.get());
             }
             return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(
                     result.first, rebalanceTreeAfterDelete(std::move(node)));
@@ -215,7 +215,7 @@ namespace shock_audio {
                     node->setValue(node->getRightPtr()->getValue());
                     updateColorsBeforeDelete(node->getRightPtr());
                     node->setRight(node->getRightPtr()->getRightUniquePtr());
-                    updateMax(node.get());
+                    updateMinMax(node.get());
                 } else {
                     node->setRight(successorDelete(node.get(), node->getRightUniquePtr()));
                 }
@@ -229,11 +229,11 @@ namespace shock_audio {
             if (range.first <= node->getFrom()) {
                 result = removeByOverlapRangeRecur(node->getLeftUniquePtr(), range);
                 node->setLeft(std::move(result.second));
-                updateMax(node.get());
+                updateMinMax(node.get());
             } else {
                 result = removeByOverlapRangeRecur(node->getRightUniquePtr(), range);
                 node->setRight(std::move(result.second));
-                updateMax(node.get());
+                updateMinMax(node.get());
             }
             return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(
                     result.first, rebalanceTreeAfterDelete(std::move(node)));
@@ -265,7 +265,7 @@ namespace shock_audio {
                     node->setValue(node->getRightPtr()->getValue());
                     updateColorsBeforeDelete(node->getRightPtr());
                     node->setRight(node->getRightPtr()->getRightUniquePtr());
-                    updateMax(node.get());
+                    updateMinMax(node.get());
                 } else {
                     node->setRight(successorDelete(node.get(), node->getRightUniquePtr()));
                 }
@@ -279,11 +279,11 @@ namespace shock_audio {
             if (key <= node->getFrom()) {
                 result = removeByKeyRecur(node->getLeftUniquePtr(), key);
                 node->setLeft(std::move(result.second));
-                updateMax(node.get());
+                updateMinMax(node.get());
             } else {
                 result = removeByKeyRecur(node->getRightUniquePtr(), key);
                 node->setRight(std::move(result.second));
-                updateMax(node.get());
+                updateMinMax(node.get());
             }
             return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(
                     result.first, rebalanceTreeAfterDelete(std::move(node)));
@@ -320,7 +320,7 @@ namespace shock_audio {
                     node->setValue(node->getRightPtr()->getValue());
                     updateColorsBeforeDelete(node->getRightPtr());
                     node->setRight(node->getRightPtr()->getRightUniquePtr());
-                    updateMax(node.get());
+                    updateMinMax(node.get());
                 } else {
                     node->setRight(successorDelete(node.get(), node->getRightUniquePtr()));
                 }
@@ -333,11 +333,11 @@ namespace shock_audio {
             std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>> result;
             result = removeByValueRecur(node->getLeftUniquePtr(), key);
             node->setLeft(std::move(result.second));
-            updateMax(node.get());
+            updateMinMax(node.get());
             if (!result.first) {
                 result = removeByValueRecur(node->getRightUniquePtr(), key);
                 node->setRight(std::move(result.second));
-                updateMax(node.get());
+                updateMinMax(node.get());
             }
             return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(
                     result.first, rebalanceTreeAfterDelete(std::move(node)));
@@ -378,7 +378,7 @@ namespace shock_audio {
                     node->setValue(node->getRightPtr()->getValue());
                     updateColorsBeforeDelete(node->getRightPtr());
                     node->setRight(node->getRightPtr()->getRightUniquePtr());
-                    updateMax(node.get());
+                    updateMinMax(node.get());
                 } else {
                     node->setRight(successorDelete(node.get(), node->getRightUniquePtr()));
                 }
@@ -392,11 +392,11 @@ namespace shock_audio {
             if (range.first <= node->getFrom()) {
                 result = removeByRangeRecur(node->getLeftUniquePtr(), range);
                 node->setLeft(std::move(result.second));
-                updateMax(node.get());
+                updateMinMax(node.get());
             } else {
                 result = removeByRangeRecur(node->getRightUniquePtr(), range);
                 node->setRight(std::move(result.second));
-                updateMax(node.get());
+                updateMinMax(node.get());
             }
             return std::pair<bool, std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>>(
                     result.first, rebalanceTreeAfterDelete(std::move(node)));
@@ -576,16 +576,11 @@ namespace shock_audio {
             list->push_back(static_cast<RangeItem<KEY_TYPE, DATA_TYPE> *>(node));
             (*count)--;
         }
-        if (node->getLeftPtr() != nullptr && node->getLeftPtr()->getMax() > range.first){
+        if (node->getLeftPtr() != nullptr && node->getLeftPtr()->isContainMinMax(range))
             getByContainRecur(node->getLeftPtr(), list, range, count);
-            if (node->getRightPtr() != nullptr)
-                getByContainRecur(node->getRightPtr(), list, range, count);
-        } else {
-            if (node->getRightPtr() != nullptr)
-                getByContainRecur(node->getRightPtr(), list, range, count);
-            if (node->getLeftPtr() != nullptr)
-                getByContainRecur(node->getLeftPtr(), list, range, count);
-        }
+
+        if (node->getRightPtr()!= nullptr && node->getRightPtr()->isContainMinMax(range))
+            getByContainRecur(node->getRightPtr(), list, range, count);
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
@@ -596,16 +591,11 @@ namespace shock_audio {
             list->push_back(static_cast<RangeItem<KEY_TYPE, DATA_TYPE> *>(node));
             (*count)--;
         }
-        if (node->getLeftPtr() != nullptr && node->getLeftPtr()->getMax() > range.first){
+        if (node->getLeftPtr() != nullptr && node->getLeftPtr()->isOverlapMinMax(range))
             getByOverlapRecur(node->getLeftPtr(), list, range, count);
-            if (node->getRightPtr() != nullptr)
-                getByOverlapRecur(node->getRightPtr(), list, range, count);
-        } else {
-            if (node->getRightPtr() != nullptr)
-                getByOverlapRecur(node->getRightPtr(), list, range, count);
-            if (node->getLeftPtr() != nullptr)
-                getByOverlapRecur(node->getLeftPtr(), list, range, count);
-        }
+
+        if (node->getRightPtr()!= nullptr && node->getRightPtr()->isOverlapMinMax(range))
+            getByOverlapRecur(node->getRightPtr(), list, range, count);
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
@@ -616,16 +606,18 @@ namespace shock_audio {
             list->push_back(static_cast<RangeItem<KEY_TYPE, DATA_TYPE> *>(node));
             (*count)--;
         }
-        if (node->getLeftPtr() != nullptr && node->getLeftPtr()->getMax() >= key){
+
+        if (node->getLeftPtr() != nullptr && node->getLeftPtr()->isOverlapMinMax(key))
             getRecur(node->getLeftPtr(), list, key, count);
-            if (node->getRightPtr() != nullptr)
-                getRecur(node->getRightPtr(), list, key, count);
-        } else {
-            if (node->getRightPtr() != nullptr)
-                getRecur(node->getRightPtr(), list, key, count);
-            if (node->getLeftPtr() != nullptr)
-                getRecur(node->getLeftPtr(), list, key, count);
-        }
+
+        if (node->getRightPtr()!= nullptr && node->getRightPtr()->isOverlapMinMax(key))
+            getRecur(node->getRightPtr(), list, key, count);
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    const RangeItem<KEY_TYPE, DATA_TYPE> *
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::getByRange(KEY_TYPE from, KEY_TYPE to) const {
+        return nullptr;
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>
@@ -686,11 +678,12 @@ namespace shock_audio {
 
     template<typename KEY_TYPE, typename DATA_TYPE>
     void
-    MutableRangeMap<KEY_TYPE, DATA_TYPE>::updateMax(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::updateMinMax(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) {
         if (node == nullptr)
             return;
         auto nodeMax = node->getRange().second;
-        if (node->getLeftPtr() == nullptr)
+        auto nodeMin = node->getRange().first;
+        if (node->getLeftPtr() == nullptr) {
             if (node->getRightPtr() == nullptr)
                 node->setMax(nodeMax);
             else {
@@ -700,18 +693,23 @@ namespace shock_audio {
                 else
                     node->setMax(nodeMax);
             }
-        else if (node->getRightPtr() == nullptr) {
+            node->setMin(nodeMin);
+        }else if (node->getRightPtr() == nullptr) {
             auto leftMax = node->getLeftPtr()->getMax();
+            auto leftMin = node->getLeftPtr()->getMin();
             if (leftMax > nodeMax)
                 node->setMax(leftMax);
             else
                 node->setMax(nodeMax);
+            node->setMin(leftMin);
         } else {
+            auto leftMin = node->getLeftPtr()->getMin();
             auto max = std::max(node->getLeftPtr()->getMax(), node->getRightPtr()->getMax());
             if (max > nodeMax)
                 node->setMax(max);
             else
                 node->setMax(nodeMax);
+            node->setMin(leftMin);
         }
     }
 
@@ -764,6 +762,10 @@ namespace shock_audio {
         else {
             auto leftChild = node->getLeftPtr();
             auto rightChild = node->getRightPtr();
+            if (leftChild != nullptr && leftChild->getColor() == shock_audio_impl::Color::RED &&
+                rightChild != nullptr && rightChild->getColor() == shock_audio_impl::Color::RED
+            )
+                return SC;
             if (rightChild == nullptr || rightChild->getColor() == shock_audio_impl::Color::BLACK) {
                 if (leftChild == nullptr || leftChild->getColor() == shock_audio_impl::Color::BLACK)
                     return NOTHING;
@@ -789,8 +791,6 @@ namespace shock_audio {
                             return RR;
                     else
                         return RL;
-                } else {
-                    return SC;
                 }
             }
         }
@@ -808,8 +808,12 @@ namespace shock_audio {
         new_root->setRight(std::move(node));
         new_root->getRightPtr()->setLeft(std::move(temp_subtree));
         new_root->getRightPtr()->setColor(temp_color);
-        updateMax(new_root->getRightPtr());
-        updateMax(new_root->getLeftPtr());
+        updateMinMax(new_root->getRightPtr());
+        updateMinMax(new_root->getLeftPtr());
+        if (new_root->getLeftPtr() != nullptr)
+            new_root->setMin(new_root->getLeftPtr()->getMin());
+        else
+            new_root->setMin(new_root->getFrom());
         return new_root;
     }
 
@@ -825,8 +829,12 @@ namespace shock_audio {
         new_root->setLeft(std::move(node));
         new_root->getLeftPtr()->setRight(std::move(temp_subtree));
         new_root->getLeftPtr()->setColor(temp_color);
-        updateMax(new_root->getLeftPtr());
-        updateMax(new_root->getRightPtr());
+        updateMinMax(new_root->getLeftPtr());
+        updateMinMax(new_root->getRightPtr());
+        if (new_root->getLeftPtr() != nullptr)
+            new_root->setMin(new_root->getLeftPtr()->getMin());
+        else
+            new_root->setMin(new_root->getFrom());
         return new_root;
     }
 
@@ -838,13 +846,17 @@ namespace shock_audio {
         auto new_root = std::move(node->getLeftPtr()->getRightUniquePtr());
         auto temp_color = new_root->getColor();
         new_root->setMax(node->getMax());
-        new_root->setColor(node->getColor());
+        new_root->setColor(node->getLeftPtr()->getColor());
         new_root->setLeft(std::move(node->getLeftUniquePtr()));
         new_root->getLeftPtr()->setColor(temp_color);
         node->setLeft(std::move(new_root));
         node->getLeftPtr()->getLeftPtr()->setRight(std::move(temp_subtree));
-        updateMax(node->getLeftPtr()->getLeftPtr());
-        updateMax(node->getLeftPtr()->getRightPtr());
+        updateMinMax(node->getLeftPtr()->getLeftPtr());
+        updateMinMax(node->getLeftPtr()->getRightPtr());
+        if (node->getLeftPtr()->getLeftPtr() != nullptr)
+            node->getLeftPtr()->setMin(node->getLeftPtr()->getLeftPtr()->getMin());
+        else
+            node->getLeftPtr()->setMin(node->getLeftPtr()->getFrom());
         return leftLeftRotate(std::move(node));
     }
 
@@ -861,8 +873,12 @@ namespace shock_audio {
         new_root->getRightPtr()->setColor(temp_color);
         node->setRight(std::move(new_root));
         node->getRightPtr()->getRightPtr()->setLeft(std::move(temp_subtree));
-        updateMax(node->getRightPtr()->getRightPtr());
-        updateMax(node->getRightPtr()->getLeftPtr());
+        updateMinMax(node->getRightPtr()->getRightPtr());
+        updateMinMax(node->getRightPtr()->getLeftPtr());
+        if (node->getRightPtr()->getLeftPtr() != nullptr)
+            node->getRightPtr()->setMin(node->getRightPtr()->getLeftPtr()->getMin());
+        else
+            node->getRightPtr()->setMin(node->getRightPtr()->getFrom());
         return rightRightRotate(std::move(node));
     }
 
@@ -939,6 +955,8 @@ namespace shock_audio {
             else
                 node->setLeft(std::make_unique<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>>(range, value,
                                                                                                         shock_audio_impl::Color::RED));
+            if (range.first < node->getMin())
+                node->setMin(range.first);
         } else {
             if (node->getRightPtr() != nullptr)
                 node->setRight(insert(node->getRightUniquePtr(), range, value));
@@ -1049,7 +1067,7 @@ namespace shock_audio {
                     break;
             }
             std::cout << val << " " << m << " From: " << node->getRange().first << " To: " << node->getRange().second
-                      << " Max: " << node->getMax();
+                      << " Max: " << node->getMax() << " Min: "<< node->getMin();
             std::cout << std::endl;
             printTreeRecurrent(node->getRightPtr(), space);
         }
@@ -1080,6 +1098,48 @@ namespace shock_audio {
                                     checkDifference(node->getLeftPtr()));
 
         return std::max(maxWithLeft, checkDifference(node->getRightPtr()));
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    unsigned int MutableRangeMap<KEY_TYPE, DATA_TYPE>::size() const {
+        return sizeRecur(_root.get());
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    unsigned int
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::sizeRecur(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) const{
+        if (node == nullptr)
+            return 1;
+        else
+            return sizeRecur(node->getLeftPtr()) + sizeRecur(node->getRightPtr());
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    void
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::getTestAllByKeyRecur(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node,
+                                                          std::vector<const RangeItem<KEY_TYPE, DATA_TYPE> *> *list,
+                                                          KEY_TYPE key, unsigned int* countComplexity) const {
+        (*countComplexity)++;
+        if (node->isOverlap(key)){
+            list->push_back(static_cast<RangeItem<KEY_TYPE, DATA_TYPE> *>(node));
+        }
+        if (node->getLeftPtr() != nullptr && node->getLeftPtr()->isOverlapMinMax(key))
+            getTestAllByKeyRecur(node->getLeftPtr(), list, key, countComplexity);
+
+        if (node->getRightPtr()!= nullptr && node->getRightPtr()->isOverlapMinMax(key))
+            getTestAllByKeyRecur(node->getRightPtr(), list, key, countComplexity);
+    }
+
+    template<typename KEY_TYPE, typename DATA_TYPE>
+    std::vector<const RangeItem<KEY_TYPE, DATA_TYPE> *>
+    MutableRangeMap<KEY_TYPE, DATA_TYPE>::getTestAllByKey(KEY_TYPE key) const {
+        std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> list;
+        unsigned int countComplexity = 0;
+        getTestAllByKeyRecur(_root.get(), &list, key, &countComplexity);
+        std::cout<<"CountComplexity: "<< countComplexity<<std::endl;
+        std::cout<<"ResultCount: "<<list.size()<<std::endl<<std::endl;
+//        std::cout<<"SizeOfMap: "<< size() <<std::endl;
+        return list;
     }
 
     template<typename KEY_TYPE, typename DATA_TYPE>

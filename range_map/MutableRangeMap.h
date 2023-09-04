@@ -45,6 +45,10 @@ namespace shock_audio {
 
         std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getAllBy(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>*)> predicate) const override;
 
+        std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getTestAllByKey(KEY_TYPE key) const;
+
+        unsigned int size() const override;
+
         void put(KEY_TYPE from, KEY_TYPE to, DATA_TYPE value);
 
         void put(std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value);
@@ -150,13 +154,17 @@ namespace shock_audio {
 
         void getAllByRecur(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node, std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> *list, std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>*)> predicate) const;
 
+        void getTestAllByKeyRecur(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node, std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> *list, KEY_TYPE key, unsigned int *countComplexity) const;
+
+        const RangeItem<KEY_TYPE, DATA_TYPE>* getByRange(KEY_TYPE from, KEY_TYPE to) const override;
+
         shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* getMaxNode(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) const;
 
         shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* getMinNode(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node) const;
 
         bool isNullNode(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
 
-        void updateMax(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
+        void updateMinMax(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
 
         void updateColorsBeforeDelete(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE> *node);
 
@@ -171,6 +179,8 @@ namespace shock_audio {
         int checkDifference(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node) const;
 
         bool isContain(std::pair<KEY_TYPE, KEY_TYPE> range, shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node) const;
+
+        unsigned int sizeRecur(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node) const;
 
     };
 

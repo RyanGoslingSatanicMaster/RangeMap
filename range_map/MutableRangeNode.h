@@ -36,7 +36,11 @@ namespace shock_audio_impl {
 
         void setMax(KEY_TYPE max);
 
-        KEY_TYPE getMax();
+        KEY_TYPE getMax() const;
+
+        void setMin(KEY_TYPE min);
+
+        KEY_TYPE getMin() const;
 
         void setFrom(KEY_TYPE from);
 
@@ -112,10 +116,21 @@ namespace shock_audio_impl {
 
         int containCount(DATA_TYPE value) const override;
 
+        bool isOverlapMinMax(KEY_TYPE key) const;
+
+        bool isOverlapMinMax(KEY_TYPE from, KEY_TYPE to) const;
+
+        bool isOverlapMinMax(std::pair<KEY_TYPE, KEY_TYPE> range) const;
+
+        bool isContainMinMax(KEY_TYPE from, KEY_TYPE to) const;
+
+        bool isContainMinMax(std::pair<KEY_TYPE, KEY_TYPE> range) const;
+
         bool operator==(const MutableRangeNode<KEY_TYPE, DATA_TYPE>& other);
 
     private:
         KEY_TYPE _max;
+        KEY_TYPE _min;
         Color _color{Color::BLACK};
         std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> _left{nullptr};
         std::unique_ptr<MutableRangeNode<KEY_TYPE, DATA_TYPE>> _right{nullptr};
