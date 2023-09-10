@@ -47,25 +47,7 @@ cmake_ninja_workdir = C$:/Users/vince/CLionProjects/rangeMap/cmake-build-debug/
 #############################################
 # Order-only phony target for rangeMap
 
-build cmake_object_order_depends_target_rangeMap: phony || CMakeFiles/rangeMap.dir
-
-build CMakeFiles/rangeMap.dir/range_map/MutableRangeMap.cpp.obj: CXX_COMPILER__rangeMap_Debug C$:/Users/vince/CLionProjects/rangeMap/range_map/MutableRangeMap.cpp || cmake_object_order_depends_target_rangeMap
-  DEP_FILE = CMakeFiles\rangeMap.dir\range_map\MutableRangeMap.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu++20
-  OBJECT_DIR = CMakeFiles\rangeMap.dir
-  OBJECT_FILE_DIR = CMakeFiles\rangeMap.dir\range_map
-
-build CMakeFiles/rangeMap.dir/range_map/exceptions/InvalidRangeException.cpp.obj: CXX_COMPILER__rangeMap_Debug C$:/Users/vince/CLionProjects/rangeMap/range_map/exceptions/InvalidRangeException.cpp || cmake_object_order_depends_target_rangeMap
-  DEP_FILE = CMakeFiles\rangeMap.dir\range_map\exceptions\InvalidRangeException.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu++20
-  OBJECT_DIR = CMakeFiles\rangeMap.dir
-  OBJECT_FILE_DIR = CMakeFiles\rangeMap.dir\range_map\exceptions
-
-build CMakeFiles/rangeMap.dir/range_map/MutableRangeNode.cpp.obj: CXX_COMPILER__rangeMap_Debug C$:/Users/vince/CLionProjects/rangeMap/range_map/MutableRangeNode.cpp || cmake_object_order_depends_target_rangeMap
-  DEP_FILE = CMakeFiles\rangeMap.dir\range_map\MutableRangeNode.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu++20
-  OBJECT_DIR = CMakeFiles\rangeMap.dir
-  OBJECT_FILE_DIR = CMakeFiles\rangeMap.dir\range_map
+build cmake_object_order_depends_target_rangeMap: phony || cmake_object_order_depends_target_RangeMapLib
 
 build CMakeFiles/rangeMap.dir/main.cpp.obj: CXX_COMPILER__rangeMap_Debug C$:/Users/vince/CLionProjects/rangeMap/main.cpp || cmake_object_order_depends_target_rangeMap
   DEP_FILE = CMakeFiles\rangeMap.dir\main.cpp.obj.d
@@ -73,17 +55,23 @@ build CMakeFiles/rangeMap.dir/main.cpp.obj: CXX_COMPILER__rangeMap_Debug C$:/Use
   OBJECT_DIR = CMakeFiles\rangeMap.dir
   OBJECT_FILE_DIR = CMakeFiles\rangeMap.dir
 
-build CMakeFiles/rangeMap.dir/range_map/RangeItem.cpp.obj: CXX_COMPILER__rangeMap_Debug C$:/Users/vince/CLionProjects/rangeMap/range_map/RangeItem.cpp || cmake_object_order_depends_target_rangeMap
-  DEP_FILE = CMakeFiles\rangeMap.dir\range_map\RangeItem.cpp.obj.d
+build CMakeFiles/rangeMap.dir/tests/DeleteTests.cpp.obj: CXX_COMPILER__rangeMap_Debug C$:/Users/vince/CLionProjects/rangeMap/tests/DeleteTests.cpp || cmake_object_order_depends_target_rangeMap
+  DEP_FILE = CMakeFiles\rangeMap.dir\tests\DeleteTests.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu++20
   OBJECT_DIR = CMakeFiles\rangeMap.dir
-  OBJECT_FILE_DIR = CMakeFiles\rangeMap.dir\range_map
+  OBJECT_FILE_DIR = CMakeFiles\rangeMap.dir\tests
 
-build CMakeFiles/rangeMap.dir/range_map/RangeNode.cpp.obj: CXX_COMPILER__rangeMap_Debug C$:/Users/vince/CLionProjects/rangeMap/range_map/RangeNode.cpp || cmake_object_order_depends_target_rangeMap
-  DEP_FILE = CMakeFiles\rangeMap.dir\range_map\RangeNode.cpp.obj.d
+build CMakeFiles/rangeMap.dir/tests/GetTests.cpp.obj: CXX_COMPILER__rangeMap_Debug C$:/Users/vince/CLionProjects/rangeMap/tests/GetTests.cpp || cmake_object_order_depends_target_rangeMap
+  DEP_FILE = CMakeFiles\rangeMap.dir\tests\GetTests.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu++20
   OBJECT_DIR = CMakeFiles\rangeMap.dir
-  OBJECT_FILE_DIR = CMakeFiles\rangeMap.dir\range_map
+  OBJECT_FILE_DIR = CMakeFiles\rangeMap.dir\tests
+
+build CMakeFiles/rangeMap.dir/tests/InsertTests.cpp.obj: CXX_COMPILER__rangeMap_Debug C$:/Users/vince/CLionProjects/rangeMap/tests/InsertTests.cpp || cmake_object_order_depends_target_rangeMap
+  DEP_FILE = CMakeFiles\rangeMap.dir\tests\InsertTests.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++20
+  OBJECT_DIR = CMakeFiles\rangeMap.dir
+  OBJECT_FILE_DIR = CMakeFiles\rangeMap.dir\tests
 
 
 # =============================================================================
@@ -93,9 +81,10 @@ build CMakeFiles/rangeMap.dir/range_map/RangeNode.cpp.obj: CXX_COMPILER__rangeMa
 #############################################
 # Link the executable rangeMap.exe
 
-build rangeMap.exe: CXX_EXECUTABLE_LINKER__rangeMap_Debug CMakeFiles/rangeMap.dir/range_map/MutableRangeMap.cpp.obj CMakeFiles/rangeMap.dir/range_map/exceptions/InvalidRangeException.cpp.obj CMakeFiles/rangeMap.dir/range_map/MutableRangeNode.cpp.obj CMakeFiles/rangeMap.dir/main.cpp.obj CMakeFiles/rangeMap.dir/range_map/RangeItem.cpp.obj CMakeFiles/rangeMap.dir/range_map/RangeNode.cpp.obj
+build rangeMap.exe: CXX_EXECUTABLE_LINKER__rangeMap_Debug CMakeFiles/rangeMap.dir/main.cpp.obj CMakeFiles/rangeMap.dir/tests/DeleteTests.cpp.obj CMakeFiles/rangeMap.dir/tests/GetTests.cpp.obj CMakeFiles/rangeMap.dir/tests/InsertTests.cpp.obj | range_map/libRangeMapLib.dll.a || range_map/libRangeMapLib.dll
   FLAGS = -g
-  LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_LIBRARIES = range_map/libRangeMapLib.dll.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_PATH = -LC:/Users/vince/CLionProjects/rangeMap/range_map
   OBJECT_DIR = CMakeFiles\rangeMap.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
@@ -127,7 +116,67 @@ build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
 build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 
 # =============================================================================
+# Write statements declared in CMakeLists.txt:
+# C:/Users/vince/CLionProjects/rangeMap/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for SHARED_LIBRARY target RangeMapLib
+
+
+#############################################
+# Order-only phony target for RangeMapLib
+
+build cmake_object_order_depends_target_RangeMapLib: phony || range_map/CMakeFiles/RangeMapLib.dir
+
+
+# =============================================================================
+# Link build statements for SHARED_LIBRARY target RangeMapLib
+
+
+#############################################
+# Link the shared library range_map\libRangeMapLib.dll
+
+build range_map/libRangeMapLib.dll range_map/libRangeMapLib.dll.a: CXX_SHARED_LIBRARY_LINKER__RangeMapLib_Debug
+  LANGUAGE_COMPILE_FLAGS = -g
+  LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  OBJECT_DIR = range_map\CMakeFiles\RangeMapLib.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  RESTAT = 1
+  TARGET_FILE = range_map\libRangeMapLib.dll
+  TARGET_IMPLIB = range_map\libRangeMapLib.dll.a
+  TARGET_PDB = RangeMapLib.dll.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build range_map/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cmd.exe /C "cd /D C:\Users\vince\CLionProjects\rangeMap\cmake-build-debug\range_map && "C:\Program Files\JetBrains\CLion 2023.1.2\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build range_map/edit_cache: phony range_map/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build range_map/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cmd.exe /C "cd /D C:\Users\vince\CLionProjects\rangeMap\cmake-build-debug\range_map && "C:\Program Files\JetBrains\CLion 2023.1.2\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -SC:\Users\vince\CLionProjects\rangeMap -BC:\Users\vince\CLionProjects\rangeMap\cmake-build-debug"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build range_map/rebuild_cache: phony range_map/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
 # Target aliases.
+
+build RangeMapLib: phony range_map/libRangeMapLib.dll
+
+build libRangeMapLib.dll: phony range_map/libRangeMapLib.dll
 
 build rangeMap: phony rangeMap.exe
 
@@ -139,7 +188,14 @@ build rangeMap: phony rangeMap.exe
 #############################################
 # Folder: C:/Users/vince/CLionProjects/rangeMap/cmake-build-debug
 
-build all: phony rangeMap.exe
+build all: phony rangeMap.exe range_map/all
+
+# =============================================================================
+
+#############################################
+# Folder: C:/Users/vince/CLionProjects/rangeMap/cmake-build-debug/range_map
+
+build range_map/all: phony range_map/libRangeMapLib.dll
 
 # =============================================================================
 # Built-in targets
@@ -148,14 +204,14 @@ build all: phony rangeMap.exe
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/WindowsPaths.cmake C$:/Users/vince/CLionProjects/rangeMap/CMakeLists.txt CMakeCache.txt CMakeFiles/3.25.2/CMakeCCompiler.cmake CMakeFiles/3.25.2/CMakeCXXCompiler.cmake CMakeFiles/3.25.2/CMakeRCCompiler.cmake CMakeFiles/3.25.2/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/WindowsPaths.cmake C$:/Users/vince/CLionProjects/rangeMap/CMakeLists.txt C$:/Users/vince/CLionProjects/rangeMap/range_map/CMakeLists.txt CMakeCache.txt CMakeFiles/3.25.2/CMakeCCompiler.cmake CMakeFiles/3.25.2/CMakeCXXCompiler.cmake CMakeFiles/3.25.2/CMakeRCCompiler.cmake CMakeFiles/3.25.2/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/WindowsPaths.cmake C$:/Users/vince/CLionProjects/rangeMap/CMakeLists.txt CMakeCache.txt CMakeFiles/3.25.2/CMakeCCompiler.cmake CMakeFiles/3.25.2/CMakeCXXCompiler.cmake CMakeFiles/3.25.2/CMakeRCCompiler.cmake CMakeFiles/3.25.2/CMakeSystem.cmake: phony
+build C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.1.2/bin/cmake/win/x64/share/cmake-3.25/Modules/Platform/WindowsPaths.cmake C$:/Users/vince/CLionProjects/rangeMap/CMakeLists.txt C$:/Users/vince/CLionProjects/rangeMap/range_map/CMakeLists.txt CMakeCache.txt CMakeFiles/3.25.2/CMakeCCompiler.cmake CMakeFiles/3.25.2/CMakeCXXCompiler.cmake CMakeFiles/3.25.2/CMakeRCCompiler.cmake CMakeFiles/3.25.2/CMakeSystem.cmake: phony
 
 
 #############################################

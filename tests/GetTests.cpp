@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
-#include "../range_map/MutableRangeMap.cpp"
+#include "../range_map/MutableRangeMap.h"
+#include "GetTests.h"
 
 namespace test {
 
@@ -104,18 +105,20 @@ namespace test {
 
     }
 
-//void testCaseGetBy(shock_audio::MutableRangeMap<int, char> *t){
-//    auto el = t->get(3, 1);
-//    auto flag = true;
-//    std::vector<std::pair<int, int>> m{std::pair(3, 44), std::pair(3, 34), std::pair(11, 54)};
-//    for (int i = 0; i < el.size(); ++i) {
-//        flag = el[i]->isEqualRange(m[i]) && flag;
-//    }
-//    if (!flag){
-//        throw "testCaseGetByContain Failed";
-//    } else
-//        std::cout<<std::endl<<"testCaseGetByContain Success"<<std::endl;
-//}
+void testCaseGetIf(shock_audio::MutableRangeMap<int, char> *t){
+    auto el = t->getIf([] (const shock_audio::RangeNode<int, char> * node) {
+        return node->getLeft() == nullptr && node->getRight() == nullptr;
+    }, 1);
+    auto flag = true;
+    std::vector<std::pair<int, int>> m{std::pair(1, 11)};
+    for (int i = 0; i < el.size(); ++i) {
+        flag = el[i]->isEqualRange(m[i]) && flag;
+    }
+    if (!flag){
+        throw "testCaseGetIf Failed";
+    } else
+        std::cout<<std::endl<<"testCaseIf Success"<<std::endl;
+}
 
     void TestCaseGet() {
         shock_audio::MutableRangeMap<int, char> t;
@@ -126,6 +129,7 @@ namespace test {
         testCaseGetCountByKey(&t);
         testCaseGetByOverlap(&t);
         testCaseGetByContain(&t);
+        testCaseGetIf(&t);
         stressTestGet(100, 3);
         stressTestGet(1000, 5);
         stressTestGet(10000, 7);

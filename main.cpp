@@ -1,5 +1,5 @@
-#include "tests/GetTests.cpp"
-#include "tests/InsertTests.cpp"
+#include "tests/GetTests.h"
+#include "tests/InsertTests.h"
 
 /** Test Cases
  * Deletion:
@@ -66,7 +66,8 @@ int main() {
 //    std::cout<<std::endl;
 //    std::cout<<"MaxDepth:"<<t->getMaxDepth();
 //    std::cout<<"BalanceFactor:"<<t->getBalanceDifference();
-//    test::TestCaseGet();
+    test::TestCaseGet();
     test::TestCaseInsert();
+//    test::TestCaseInsert();
     return 0;
 }

@@ -10,7 +10,9 @@
 namespace shock_audio {
 
     class InvalidRangeException: public std::exception{
-        [[nodiscard]] const char * what () const noexcept override;
+        [[nodiscard]] const char * what () const noexcept override {
+            return "Invalid range was passed";
+        }
     };
 
 }

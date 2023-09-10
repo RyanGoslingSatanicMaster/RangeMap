@@ -1,3 +1,6 @@
 C:/Users/vince/CLionProjects/rangeMap/cmake-build-debug/CMakeFiles/rangeMap.dir
 C:/Users/vince/CLionProjects/rangeMap/cmake-build-debug/CMakeFiles/edit_cache.dir
 C:/Users/vince/CLionProjects/rangeMap/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/vince/CLionProjects/rangeMap/cmake-build-debug/range_map/CMakeFiles/RangeMapLib.dir
+C:/Users/vince/CLionProjects/rangeMap/cmake-build-debug/range_map/CMakeFiles/edit_cache.dir
+C:/Users/vince/CLionProjects/rangeMap/cmake-build-debug/range_map/CMakeFiles/rebuild_cache.dir
