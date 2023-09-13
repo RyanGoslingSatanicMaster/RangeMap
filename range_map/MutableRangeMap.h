@@ -164,6 +164,11 @@ namespace shock_audio {
             _root = std::move(new_root);
         }
 
+        void removeByRange(std::pair<KEY_TYPE, KEY_TYPE> range) {
+            auto result = removeByRangeRecur(std::move(_root), range);
+            _root = std::move(std::move(checkIfRootDoubleBlackOrRed(std::move(result.second))));
+        }
+
         void removeByContainedRange(std::pair<KEY_TYPE, KEY_TYPE> range, unsigned int count = 1) {
             std::unique_ptr<shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>> new_root = std::move(_root);
             auto resFlag = true;
@@ -1095,7 +1100,7 @@ namespace shock_audio {
                 return nullptr;
             if (node->isEqualRange(range))
                 return static_cast<const RangeItem<KEY_TYPE, DATA_TYPE> *>(node);
-            if (node->getFrom() <= range.first)
+            if (node->getFrom() >= range.first)
                 return getByRangeRecur(node->getLeftPtr(), range);
             else
                 return getByRangeRecur(node->getRightPtr(), range);

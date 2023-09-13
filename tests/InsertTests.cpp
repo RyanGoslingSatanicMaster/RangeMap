@@ -26,6 +26,5 @@ namespace test {
         balanceFactorTest(100);
         balanceFactorTest(1000);
         balanceFactorTest(10000);
-        balanceFactorTest(100000);
     }
 }

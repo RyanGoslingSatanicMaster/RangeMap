@@ -11,7 +11,7 @@ add_executable(
         tests/InsertTests.cpp
         tests/GetTests.h
         tests/InsertTests.h
-)
+        tests/DeleteTests.h)
 
 add_subdirectory(range_map)
 
