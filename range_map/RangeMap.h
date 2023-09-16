@@ -51,6 +51,8 @@ namespace shock_audio{
 
         virtual unsigned int size() const = 0;
 
+        virtual void traversal(std::function<void(const RangeNode<KEY_TYPE, DATA_TYPE>*)> predicate) const = 0;
+
         virtual ~RangeMap() = default;
 
     };

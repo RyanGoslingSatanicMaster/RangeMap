@@ -14,7 +14,7 @@ namespace shock_audio{
 
         RangeItem() = delete;
 
-        RangeItem(RangeItem<KEY_TYPE, DATA_TYPE> const &item) :
+        explicit RangeItem(RangeItem<KEY_TYPE, DATA_TYPE> const &item) :
                 _value(item._value),
                 _from(item._from),
                 _to(item._to) {}
@@ -22,14 +22,21 @@ namespace shock_audio{
         explicit RangeItem(KEY_TYPE from, KEY_TYPE to, DATA_TYPE value)  :
                 _from(from),
                 _to(to),
-                _value({value}){
+                _value(std::vector<DATA_TYPE>{value}){
             assertRange(from, to);
         }
 
         explicit RangeItem(std::pair<KEY_TYPE, KEY_TYPE> range, DATA_TYPE value)  :
                 _from(range.first),
                 _to(range.second),
-                _value({value}) {
+                _value(std::vector<DATA_TYPE>{value}) {
+            assertRange(range.first, range.second);
+        }
+
+        explicit RangeItem(std::pair<KEY_TYPE, KEY_TYPE> range, std::vector<DATA_TYPE> value)  :
+                _from(range.first),
+                _to(range.second),
+                _value(value) {
             assertRange(range.first, range.second);
         }
 

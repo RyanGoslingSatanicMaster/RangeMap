@@ -166,7 +166,7 @@ namespace shock_audio {
 
         void removeByRange(std::pair<KEY_TYPE, KEY_TYPE> range) {
             auto result = removeByRangeRecur(std::move(_root), range);
-            _root = std::move(std::move(checkIfRootDoubleBlackOrRed(std::move(result.second))));
+            _root = std::move(checkIfRootDoubleBlackOrRed(std::move(result.second)));
         }
 
         void removeByContainedRange(std::pair<KEY_TYPE, KEY_TYPE> range, unsigned int count = 1) {
@@ -320,6 +320,10 @@ namespace shock_audio {
             return (RangeNode<KEY_TYPE, DATA_TYPE>*) getMinNode(_root.get());
         }
 
+        void traversal(std::function<void(const RangeNode<KEY_TYPE, DATA_TYPE>*)> predicate) const override {
+            traversalRecur(_root.get(), predicate);
+        }
+
         int getBalanceDifference() const override {
             return checkDifference(_root.get());
         }
@@ -356,11 +360,12 @@ namespace shock_audio {
                 root->setRange(node->getLeftPtr()->getRange());
                 root->setValue(node->getLeftPtr()->getValue());
                 updateColorsBeforeDelete(node->getLeftPtr());
-                node->setLeft(node->getLeftUniquePtr()->getRightUniquePtr());
-                updateMinMax(node.get());
+                node->setLeft(node->getLeftPtr()->getRightUniquePtr());
+                updateMinMax(node->getLeftPtr());
+                updateMinMax(root);
                 return rebalanceTreeAfterDelete(std::move(node));
             }
-            updateMinMax(node.get());
+            updateMinMax(node->getLeftPtr());
             return rebalanceTreeAfterDelete(std::move(node));
         }
 
@@ -369,8 +374,8 @@ namespace shock_audio {
                 return;
             auto nodeMax = node->getRange().second;
             auto nodeMin = node->getRange().first;
-            if (node->getLeftPtr() == nullptr) {
-                if (node->getRightPtr() == nullptr)
+            if (node->getLeftPtr() == nullptr || isNullNode(node->getLeftPtr())) {
+                if (node->getRightPtr() == nullptr || isNullNode(node->getRightPtr()))
                     node->setMax(nodeMax);
                 else {
                     auto rightMax = node->getRightPtr()->getMax();
@@ -380,7 +385,7 @@ namespace shock_audio {
                         node->setMax(nodeMax);
                 }
                 node->setMin(nodeMin);
-            }else if (node->getRightPtr() == nullptr) {
+            }else if (node->getRightPtr() == nullptr || isNullNode(node->getRightPtr())) {
                 auto leftMax = node->getLeftPtr()->getMax();
                 auto leftMin = node->getLeftPtr()->getMin();
                 if (leftMax > nodeMax)
@@ -430,10 +435,11 @@ namespace shock_audio {
             else {
                 auto leftChild = node->getLeftPtr();
                 auto rightChild = node->getRightPtr();
+                auto flagSwitchColor = false;
                 if (leftChild != nullptr && leftChild->getColor() == shock_audio_impl::Color::RED &&
                     rightChild != nullptr && rightChild->getColor() == shock_audio_impl::Color::RED
                         )
-                    return SC;
+                    flagSwitchColor = true;
                 if (rightChild == nullptr || rightChild->getColor() == shock_audio_impl::Color::BLACK) {
                     if (leftChild == nullptr || leftChild->getColor() == shock_audio_impl::Color::BLACK)
                         return NOTHING;
@@ -443,10 +449,18 @@ namespace shock_audio {
                         if (leftGrandChild == nullptr || leftGrandChild->getColor() == shock_audio_impl::Color::BLACK)
                             if (rightGrandChild == nullptr || rightGrandChild->getColor() == shock_audio_impl::Color::BLACK)
                                 return NOTHING;
+                            else {
+                                if (flagSwitchColor)
+                                    return SC;
+                                else
+                                    return LR;
+                            }
+                        else {
+                            if (flagSwitchColor)
+                                return SC;
                             else
-                                return LR;
-                        else
-                            return LL;
+                                return LL;
+                        }
                     }
                 } else {
                     if (leftChild == nullptr || leftChild->getColor() == shock_audio_impl::Color::BLACK) {
@@ -455,12 +469,22 @@ namespace shock_audio {
                         if (leftGrandChild == nullptr || leftGrandChild->getColor() == shock_audio_impl::Color::BLACK)
                             if (rightGrandChild == nullptr || rightGrandChild->getColor() == shock_audio_impl::Color::BLACK)
                                 return NOTHING;
+                            else {
+                                if (flagSwitchColor)
+                                    return SC;
+                                else
+                                    return RR;
+                            }
+                        else {
+                            if (flagSwitchColor)
+                                return SC;
                             else
-                                return RR;
-                        else
-                            return RL;
+                                return RL;
+                        }
                     }
                 }
+                if (flagSwitchColor)
+                    return SC;
             }
         }
 
@@ -1189,7 +1213,6 @@ namespace shock_audio {
                 node->addValue(value);
                 return node;
             }
-
             if (range.first <= node->getFrom()) {
                 if (node->getLeftPtr() != nullptr)
                     node->setLeft(insert(node->getLeftUniquePtr(), range, value));
@@ -1286,6 +1309,14 @@ namespace shock_audio {
                 return 1;
             else
                 return sizeRecur(node->getLeftPtr()) + sizeRecur(node->getRightPtr());
+        }
+
+        void traversalRecur(shock_audio_impl::MutableRangeNode<KEY_TYPE, DATA_TYPE>* node, std::function<void(const RangeNode<KEY_TYPE, DATA_TYPE>*)> predicate) const{
+            if (node == nullptr)
+                return;
+            predicate(node);
+            traversalRecur(node->getLeftPtr(), predicate);
+            traversalRecur(node->getRightPtr(), predicate);
         }
 
         /** END UTILS INTERNAL Functions*/
