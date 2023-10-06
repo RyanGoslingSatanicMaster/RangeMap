@@ -231,6 +231,22 @@ namespace shock_audio_impl {
             return shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>::isContain(other);
         }
 
+        bool isMoreThan(const shock_audio::RangeNode<KEY_TYPE, DATA_TYPE> &other) const override {
+            return shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>::isMoreThan(other.getFrom(), other.getTo());
+        }
+
+        bool isMoreThan(std::pair<KEY_TYPE, KEY_TYPE> range) const override {
+            return shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>::isMoreThan(range);
+        }
+
+        bool isMoreThan(KEY_TYPE from, KEY_TYPE to) const override {
+            return shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>::isMoreThan(from, to);
+        }
+
+        bool isMoreThan(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE> &other) const override {
+            return shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>::isMoreThan(other);
+        }
+
         bool isContained(std::pair<KEY_TYPE, KEY_TYPE> range) const override {
             return shock_audio::RangeNode<KEY_TYPE, DATA_TYPE>::isContained(range);
         }

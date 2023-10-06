@@ -42,7 +42,7 @@ namespace test {
             }
             copyT.put(random, randomTo, random);
         }
-        std::cout<<"BalanceFactorTest Success for "<<count<<" items"<<std::endl<<std::endl;
+        std::cout<<"DuplicateTest Success for "<<count<<" items"<<std::endl<<std::endl;
     }
 
     void doubleRedTest(unsigned int count){

@@ -99,6 +99,18 @@ namespace shock_audio{
             return isContained(other.getFrom(), other.getTo());
         }
 
+        virtual bool isMoreThan(std::pair<KEY_TYPE, KEY_TYPE> range) const {
+            return isMoreThan(range.first, range.second);
+        }
+
+        virtual bool isMoreThan(KEY_TYPE from, KEY_TYPE to) const {
+            return _from > from || _from == from && _to > to;
+        }
+
+        virtual bool isMoreThan(const RangeItem<KEY_TYPE, DATA_TYPE>& other) const {
+            return isMoreThan(other.getFrom(), other.getTo());
+        }
+
         virtual bool isEqualRange(std::pair<KEY_TYPE, KEY_TYPE> range) const {
             return isEqualRange(range.first, range.second);
         }

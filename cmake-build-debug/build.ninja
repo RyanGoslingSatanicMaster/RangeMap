@@ -73,6 +73,12 @@ build CMakeFiles/rangeMap.dir/tests/InsertTests.cpp.obj: CXX_COMPILER__rangeMap_
   OBJECT_DIR = CMakeFiles\rangeMap.dir
   OBJECT_FILE_DIR = CMakeFiles\rangeMap.dir\tests
 
+build CMakeFiles/rangeMap.dir/tests/ComparisionTest.cpp.obj: CXX_COMPILER__rangeMap_Debug C$:/Users/vince/CLionProjects/rangeMap/tests/ComparisionTest.cpp || cmake_object_order_depends_target_rangeMap
+  DEP_FILE = CMakeFiles\rangeMap.dir\tests\ComparisionTest.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++20
+  OBJECT_DIR = CMakeFiles\rangeMap.dir
+  OBJECT_FILE_DIR = CMakeFiles\rangeMap.dir\tests
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target rangeMap
@@ -81,7 +87,7 @@ build CMakeFiles/rangeMap.dir/tests/InsertTests.cpp.obj: CXX_COMPILER__rangeMap_
 #############################################
 # Link the executable rangeMap.exe
 
-build rangeMap.exe: CXX_EXECUTABLE_LINKER__rangeMap_Debug CMakeFiles/rangeMap.dir/main.cpp.obj CMakeFiles/rangeMap.dir/tests/DeleteTests.cpp.obj CMakeFiles/rangeMap.dir/tests/GetTests.cpp.obj CMakeFiles/rangeMap.dir/tests/InsertTests.cpp.obj | range_map/libRangeMapLib.dll.a || range_map/libRangeMapLib.dll
+build rangeMap.exe: CXX_EXECUTABLE_LINKER__rangeMap_Debug CMakeFiles/rangeMap.dir/main.cpp.obj CMakeFiles/rangeMap.dir/tests/DeleteTests.cpp.obj CMakeFiles/rangeMap.dir/tests/GetTests.cpp.obj CMakeFiles/rangeMap.dir/tests/InsertTests.cpp.obj CMakeFiles/rangeMap.dir/tests/ComparisionTest.cpp.obj | range_map/libRangeMapLib.dll.a || range_map/libRangeMapLib.dll
   FLAGS = -g
   LINK_LIBRARIES = range_map/libRangeMapLib.dll.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   LINK_PATH = -LC:/Users/vince/CLionProjects/rangeMap/range_map

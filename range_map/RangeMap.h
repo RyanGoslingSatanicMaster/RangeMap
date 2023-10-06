@@ -27,6 +27,8 @@ namespace shock_audio{
 
         virtual const RangeItem<KEY_TYPE, DATA_TYPE>* getByRange(KEY_TYPE from, KEY_TYPE to) const = 0;
 
+        virtual std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getByValue(DATA_TYPE val, unsigned int count = 1) const = 0;
+
         virtual std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getAll(KEY_TYPE key) const = 0;
 
         virtual std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getAllByOverlap(KEY_TYPE from, KEY_TYPE to) const = 0;
@@ -36,6 +38,8 @@ namespace shock_audio{
         virtual std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getAllByContained(KEY_TYPE from, KEY_TYPE to) const = 0;
 
         virtual std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getAllIf(std::function<bool(const RangeNode<KEY_TYPE, DATA_TYPE>*)> predicate) const = 0;
+
+        virtual std::vector<const RangeItem<KEY_TYPE, DATA_TYPE>*> getAllByValue(DATA_TYPE val) const = 0;
 
         virtual RangeNode<KEY_TYPE, DATA_TYPE>* getMaxNode() const = 0;
 

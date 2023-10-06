@@ -34,6 +34,8 @@ namespace shock_audio{
 
         virtual bool isEqualRange(const RangeNode<KEY_TYPE, DATA_TYPE>& other) const = 0;
 
+        virtual bool isMoreThan(const RangeNode<KEY_TYPE, DATA_TYPE>& other) const = 0;
+
         std::pair<KEY_TYPE, KEY_TYPE> getRange() const override {
             return RangeItem<KEY_TYPE, DATA_TYPE>::getRange();
         }
@@ -76,6 +78,18 @@ namespace shock_audio{
 
         bool isContain(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE> &other) const override {
             return RangeItem<KEY_TYPE, DATA_TYPE>::isContain(other);
+        }
+
+        bool isMoreThan(std::pair<KEY_TYPE, KEY_TYPE> range) const override {
+            return RangeItem<KEY_TYPE, DATA_TYPE>::isMoreThan(range);
+        }
+
+        bool isMoreThan(KEY_TYPE from, KEY_TYPE to) const override {
+            return RangeItem<KEY_TYPE, DATA_TYPE>::isMoreThan(from, to);
+        }
+
+        bool isMoreThan(const shock_audio::RangeItem<KEY_TYPE, DATA_TYPE> &other) const override {
+            return RangeItem<KEY_TYPE, DATA_TYPE>::isMoreThan(other);
         }
 
         bool isContained(std::pair<KEY_TYPE, KEY_TYPE> range) const override {
